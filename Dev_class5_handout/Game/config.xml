@@ -1,0 +1,17 @@
+<!-- Config file for the game -->
+
+<config>
+  <app>
+    <title>Juegazo MLG 420!</title>
+    <organization>UPC</organization>
+  </app>
+  <renderer>
+    <vsync value="false"/>
+  </renderer>
+  <window>
+    <resolution width="920" height="920" scale="1"/>
+    <fullscreen value="false"/>
+    
+  </window>
+
+</config>
