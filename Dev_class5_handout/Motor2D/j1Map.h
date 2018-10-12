@@ -6,10 +6,32 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
+// ----------------------------------------------------
+struct MapLayer
+{
+	p2SString	name;
+	int			width;
+	int			height;
+	uint*		data;
 
+	MapLayer() : data(NULL)
+	{}
+
+	~MapLayer()
+	{
+		RELEASE(data);
+	}
+
+	// TODO 6 (old): Short function to get the value of x,y
+	inline uint Get(int x, int y) const
+	{
+		return 0;
+	}
+};
+
+// ----------------------------------------------------
 struct TileSet
 {
-
 	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
@@ -44,7 +66,7 @@ struct MapData
 	SDL_Color			background_color;
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
-
+	p2List<MapLayer*>	layers;
 };
 
 // ----------------------------------------------------
@@ -69,15 +91,16 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-
+	// Coordinate translation methods
 	iPoint MapToWorld(int x, int y) const;
+	iPoint WorldToMap(int x, int y) const;
 
 private:
 
 	bool LoadMap();
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
-
+	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 
 public:
 
