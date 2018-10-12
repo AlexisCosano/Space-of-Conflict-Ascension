@@ -3,64 +3,20 @@
 
 #include "PugiXml/src/pugixml.hpp"
 #include "p2List.h"
-#include "p2Queue.h"
 #include "p2Point.h"
 #include "j1Module.h"
 
+// TODO 1: Create a struct for the map layer
 // ----------------------------------------------------
-struct Properties
-{
-	struct Property
-	{
-		p2SString name;
-		int value;
-	};
 
-	~Properties()
-	{
-		p2List_item<Property*>* item;
-		item = list.start;
+	// TODO 6: Short function to get the value of x,y
 
-		while(item != NULL)
-		{
-			RELEASE(item->data);
-			item = item->next;
-		}
 
-		list.clear();
-	}
-
-	int Get(const char* name, int default_value = 0) const;
-
-	p2List<Property*>	list;
-};
-
-// ----------------------------------------------------
-struct MapLayer
-{
-	p2SString	name;
-	int			width;
-	int			height;
-	uint*		data;
-	Properties	properties;
-
-	MapLayer() : data(NULL)
-	{}
-
-	~MapLayer()
-	{
-		RELEASE(data);
-	}
-
-	inline uint Get(int x, int y) const
-	{
-		return data[(y*width) + x];
-	}
-};
 
 // ----------------------------------------------------
 struct TileSet
 {
+	// TODO 7: Create a method that receives a tile id and returns it's Rectfind the Rect associated with a specific tile id
 	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
@@ -76,6 +32,18 @@ struct TileSet
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
+};
+
+struct MapLayer
+{
+	p2SString name;
+	int width;
+	int height;
+	uint* data = nullptr;
+
+
+	// la size me la paso por los huevos y tal.
+
 };
 
 enum MapTypes
@@ -95,7 +63,8 @@ struct MapData
 	SDL_Color			background_color;
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
-	p2List<MapLayer*>	layers;
+	p2List<MapLayer*> layer_array;
+	// TODO 2: Add a list/array of layers to the map!
 };
 
 // ----------------------------------------------------
@@ -120,24 +89,24 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
+	// TODO 8: Create a method that translates x,y coordinates from map positions to world positions
 	iPoint MapToWorld(int x, int y) const;
-	iPoint WorldToMap(int x, int y) const;
 
-	// BFS
-	void PropagateBFS();
-	void DrawBFS();
-	bool IsWalkable(int x, int y) const;
-	void ResetBFS();
+	void Get(int* x, int* y); //la x es el numero, la y cuantos elementos hay en una fila
+
+	SDL_Rect Tile_Rect(int tileid);
+
+	void convert_to_real_world(int*, int*);
+
+	int map = 0;
 
 private:
 
 	bool LoadMap();
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
-	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
-	bool LoadProperties(pugi::xml_node& node, Properties& properties);
-
-	TileSet* GetTilesetFromTileId(int id) const;
+	// TODO 3: Create a method that loads a single layer
+	bool LoadLayer(pugi::xml_node& node);
 
 public:
 
@@ -148,10 +117,6 @@ private:
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
-
-	/// BFS
-	p2Queue<iPoint>		frontier;
-	p2List<iPoint>		visited;
 };
 
 #endif // __j1MAP_H__

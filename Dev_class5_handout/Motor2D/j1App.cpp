@@ -1,5 +1,4 @@
 #include <iostream> 
-#include <sstream> 
 
 #include "p2Defs.h"
 #include "p2Log.h"
@@ -71,6 +70,9 @@ bool j1App::Awake()
 	bool ret = false;
 		
 	config = LoadConfig(config_file);
+
+	save_game = "save_game";
+	load_game = "save_game";
 
 	if(config.empty() == false)
 	{
@@ -273,22 +275,20 @@ const char* j1App::GetOrganization() const
 }
 
 // Load / Save
-void j1App::LoadGame(const char* file)
+void j1App::LoadGame()
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list
 	want_to_load = true;
-	//load_game.create("%s%s", fs->GetSaveDirectory(), file);
 }
 
 // ---------------------------------------
-void j1App::SaveGame(const char* file) const
+void j1App::SaveGame() const
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list ... should we overwrite ?
 
 	want_to_save = true;
-	//save_game.create(file);
 }
 
 // ---------------------------------------
@@ -330,7 +330,6 @@ bool j1App::LoadGameNow()
 	else
 		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.GetString(), result.description());
 
-
 	want_to_load = false;
 	return ret;
 }
@@ -358,8 +357,7 @@ bool j1App::SavegameNow() const
 	if(ret == true)
 	{
 		data.save_file(save_game.GetString());
-	
-		LOG("... finished saving", save_game.GetString());
+		LOG("... finished saving", );
 	}
 	else
 		LOG("Save process halted from an error in module %s", (item != NULL) ? item->data->name.GetString() : "unknown");

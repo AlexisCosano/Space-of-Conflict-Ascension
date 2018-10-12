@@ -18,6 +18,10 @@
     <fullscreen_window value="false"/>
   </window>
 
+  <file_system>
+    <path>data.zip</path>
+  </file_system>
+
   <map>
     <folder>maps/</folder>
   </map>
