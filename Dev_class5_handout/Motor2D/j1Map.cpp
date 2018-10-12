@@ -33,13 +33,14 @@ void j1Map::Draw()
 
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
 	int counter = 0;
-	if (data.layer_array.At(0) != nullptr)
+	int layer_counter = 0;
+	while (data.layer_array.At(layer_counter) != nullptr)
 	{ 
-		while (counter < data.layer_array.At(0)->data->height*data.layer_array.At(0)->data->width)
+		while (counter < data.layer_array.At(layer_counter)->data->height*data.layer_array.At(layer_counter)->data->width)
 		{
-			int id = data.layer_array.At(0)->data->data[counter]; //devuelve el tipo de tileset
+			int id = data.layer_array.At(layer_counter)->data->data[counter]; //devuelve el tipo de tileset
 			int x = counter; 
-			int y = data.layer_array.At(0)->data->width;
+			int y = data.layer_array.At(layer_counter)->data->width;
 			Get(&x, &y); 
 
 			//Now, x and y are the coordinates of the tileset
@@ -52,6 +53,8 @@ void j1Map::Draw()
 			App->render->Blit(data.tilesets.At(0)->data->texture, x, y, &Tile_Rect(id));
 		    counter++;
 		}
+		layer_counter++;
+		counter = 0;
 		// TODO 9: Complete the draw function
 	}
 }
@@ -188,7 +191,7 @@ bool j1Map::Load(const char* file_name)
 		// TODO 4: Add info here about your loaded layers
 		// Adapt this vcode with your own variables
 		
-		/*p2List_item<MapLayer*>* item_layer = data.layer_array.start;
+		p2List_item<MapLayer*>* item_layer = data.layer_array.start;
 		while(item_layer != NULL)
 		{
 			MapLayer* l = item_layer->data;
@@ -196,7 +199,7 @@ bool j1Map::Load(const char* file_name)
 			LOG("name: %s", l->name.GetString());
 			LOG("tile width: %d tile height: %d", l->width, l->height);
 			item_layer = item_layer->next;
-		}*/
+		}
 	}
 
 	map_loaded = ret;
