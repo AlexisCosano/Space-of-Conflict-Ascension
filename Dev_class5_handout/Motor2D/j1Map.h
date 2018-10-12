@@ -6,6 +6,12 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
+
+// ----------------------------------------------------
+struct Properties
+{
+};
+
 // ----------------------------------------------------
 struct MapLayer
 {
@@ -13,6 +19,7 @@ struct MapLayer
 	int			width;
 	int			height;
 	uint*		data;
+	Properties	properties;
 
 	MapLayer() : data(NULL)
 	{}
@@ -22,10 +29,9 @@ struct MapLayer
 		RELEASE(data);
 	}
 
-	// TODO 6 (old): Short function to get the value of x,y
 	inline uint Get(int x, int y) const
 	{
-		return 0;
+		return data[(y*width) + x];
 	}
 };
 
@@ -91,7 +97,6 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-	// Coordinate translation methods
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
 
@@ -101,6 +106,9 @@ private:
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
+	bool LoadProperties(pugi::xml_node& node, Properties& properties);
+
+	TileSet* GetTilesetFromTileId(int id) const;
 
 public:
 
