@@ -22,8 +22,62 @@ bool j1Map::Awake(pugi::xml_node& config)
 	bool ret = true;
 
 	folder.create(config.child("folder").child_value());
+	ResetBFS();
 
 	return ret;
+}
+
+void j1Map::ResetBFS()
+{
+	frontier.Clear();
+	visited.clear();
+	frontier.Push(iPoint(19, 4));
+	visited.add(iPoint(19, 4));
+}
+
+void j1Map::PropagateBFS()
+{
+	
+}
+
+void j1Map::DrawBFS()
+{
+	iPoint point;
+
+	// Draw visited
+	p2List_item<iPoint>* item = visited.start;
+
+	while(item)
+	{
+		point = item->data;
+		TileSet* tileset = GetTilesetFromTileId(26);
+
+		SDL_Rect r = tileset->GetTileRect(26);
+		iPoint pos = MapToWorld(point.x, point.y);
+
+		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+
+		item = item->next;
+	}
+
+	// Draw frontier
+	for (uint i = 0; i < frontier.Count(); ++i)
+	{
+		point = *(frontier.Peek(i));
+		TileSet* tileset = GetTilesetFromTileId(25);
+
+		SDL_Rect r = tileset->GetTileRect(25);
+		iPoint pos = MapToWorld(point.x, point.y);
+
+		App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+	}
+
+}
+
+bool j1Map::IsWalkable(int x, int y) const
+{
+	
+	return true;
 }
 
 void j1Map::Draw()
@@ -31,19 +85,24 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
-	
-	MapLayer* layer = this->data.layers.start->data;
+	p2List_item<MapLayer*>* item = data.layers.start;
 
-	for(int y = 0; y < data.height; ++y)
+	for(; item != NULL; item = item->next)
 	{
-		for(int x = 0; x < data.width; ++x)
+		MapLayer* layer = item->data;
+
+		if(layer->properties.Get("Nodraw") != 0)
+			continue;
+
+		for(int y = 0; y < data.height; ++y)
 		{
-			int tile_id = layer->Get(x, y);
-			if(tile_id > 0)
+			for(int x = 0; x < data.width; ++x)
 			{
-				TileSet* tileset = GetTilesetFromTileId(tile_id);
-				if (tileset != nullptr)
+				int tile_id = layer->Get(x, y);
+				if(tile_id > 0)
 				{
+					TileSet* tileset = GetTilesetFromTileId(tile_id);
+
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
@@ -52,12 +111,41 @@ void j1Map::Draw()
 			}
 		}
 	}
+
+	DrawBFS();
+}
+
+int Properties::Get(const char* value, int default_value) const
+{
+	p2List_item<Property*>* item = list.start;
+
+	while(item)
+	{
+		if(item->data->name == value)
+			return item->data->value;
+		item = item->next;
+	}
+
+	return default_value;
 }
 
 TileSet* j1Map::GetTilesetFromTileId(int id) const
 {
-	
-	return data.tilesets.start->data;
+	p2List_item<TileSet*>* item = data.tilesets.start;
+	TileSet* set = item->data;
+
+	while(item)
+	{
+		if(id < item->data->firstgid)
+		{
+			set = item->prev->data;
+			break;
+		}
+		set = item->data;
+		item = item->next;
+	}
+
+	return set;
 }
 
 iPoint j1Map::MapToWorld(int x, int y) const
@@ -157,9 +245,9 @@ bool j1Map::CleanUp()
 bool j1Map::Load(const char* file_name)
 {
 	bool ret = true;
-	p2SString tmp("maps\\%s", folder.GetString(), file_name);
+	p2SString tmp("%s%s", folder.GetString(), file_name);
 
-	pugi::xml_parse_result result = map_file.load_file("maps/iso_walk.tmx");
+	pugi::xml_parse_result result = map_file.load_file(tmp.GetString());
 
 	if(result == NULL)
 	{
@@ -400,7 +488,22 @@ bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
 	bool ret = false;
 
+	pugi::xml_node data = node.child("properties");
 
+	if(data != NULL)
+	{
+		pugi::xml_node prop;
+
+		for(prop = data.child("property"); prop; prop = prop.next_sibling("property"))
+		{
+			Properties::Property* p = new Properties::Property();
+
+			p->name = prop.attribute("name").as_string();
+			p->value = prop.attribute("value").as_int();
+
+			properties.list.add(p);
+		}
+	}
 
 	return ret;
 }

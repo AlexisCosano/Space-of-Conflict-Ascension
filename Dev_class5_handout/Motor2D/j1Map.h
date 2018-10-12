@@ -3,13 +3,36 @@
 
 #include "PugiXml/src/pugixml.hpp"
 #include "p2List.h"
+#include "p2Queue.h"
 #include "p2Point.h"
 #include "j1Module.h"
-
 
 // ----------------------------------------------------
 struct Properties
 {
+	struct Property
+	{
+		p2SString name;
+		int value;
+	};
+
+	~Properties()
+	{
+		p2List_item<Property*>* item;
+		item = list.start;
+
+		while(item != NULL)
+		{
+			RELEASE(item->data);
+			item = item->next;
+		}
+
+		list.clear();
+	}
+
+	int Get(const char* name, int default_value = 0) const;
+
+	p2List<Property*>	list;
 };
 
 // ----------------------------------------------------
@@ -100,6 +123,12 @@ public:
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
 
+	// BFS
+	void PropagateBFS();
+	void DrawBFS();
+	bool IsWalkable(int x, int y) const;
+	void ResetBFS();
+
 private:
 
 	bool LoadMap();
@@ -119,6 +148,10 @@ private:
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
+
+	/// BFS
+	p2Queue<iPoint>		frontier;
+	p2List<iPoint>		visited;
 };
 
 #endif // __j1MAP_H__

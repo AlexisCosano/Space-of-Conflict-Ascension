@@ -138,6 +138,7 @@ bool j1App::Update()
 pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 {
 	pugi::xml_node ret;
+
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
 
 	if(result == NULL)
@@ -329,6 +330,7 @@ bool j1App::LoadGameNow()
 	else
 		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.GetString(), result.description());
 
+
 	want_to_load = false;
 	return ret;
 }
@@ -355,11 +357,8 @@ bool j1App::SavegameNow() const
 
 	if(ret == true)
 	{
-		std::stringstream stream;
-		data.save(stream);
-
-		// we are done, so write data to disk
-		//fs->Save(save_game.GetString(), stream.str().c_str(), stream.str().length());
+		data.save_file(save_game.GetString());
+	
 		LOG("... finished saving", save_game.GetString());
 	}
 	else
