@@ -12,14 +12,22 @@
 
 j1Player::j1Player() : j1Module()
 {
-	name.create("player");	
+	name.create("player");
+
+	position.SetToZero();
+
+	speed = 1;
+
+	gravity = 1;
 
 	player_rect = { 0, 0, 16, 27 };
 
 	direction = 1; // 1 - right, -1 - left
 
-	jumping = false;
-	current_jump_distance = 0;
+	jump_banned = false;
+	jump_force = 1;
+	jump_distance = 70.f;
+	current_jump_distance = 0.f;
 }
 
 // Destructor ---------------------------------
@@ -34,14 +42,12 @@ bool j1Player::Awake(pugi::xml_node& config)
 	bool ret = true;
 	current_map = 1;
 
-	position.SetToZero();
+	speed = config.child("speed").attribute("value").as_int(1);
+	gravity = config.child("gravity").attribute("value").as_int(1);
+	jump_force = config.child("jump_force").attribute("value").as_int(1);
+	jump_distance = config.child("jump_distance").attribute("value").as_int(1);
+
 	LOG(" INITIAL Position = (%i, %i)", position.x, position.y);
-
-	speed = config.child("speed").attribute("value").as_int();
-	gravity = config.child("gravity").attribute("value").as_int();
-	jump_force = config.child("jump_force").attribute("value").as_int();
-	jump_distance = config.child("jump_distance").attribute("value").as_int();
-
 	return ret;
 }
 
@@ -82,48 +88,30 @@ bool j1Player::Update(float dt)
 		direction = 1;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && grounded)
 	{
-		jumping = true;
+		Jump();
 	}
 
-	if (jumping)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !jump_banned)
 	{
-		player_rect.y -= jump_force;
-		if (CheckCollisions() == false)
-		{
-			position.y = player_rect.y;
-		}
-		else
-		{
-			player_rect.y = position.y;
-		}
-		if (jump_distance <= current_jump_distance)
-		{
-			current_jump_distance = 0.f;
-			jumping = false;
-		}
-		else
-		{
-			current_jump_distance += jump_force;
-		}
+ 		Jump(); 
 	}
 	else
 	{
-		player_rect.y += gravity;
-		if (CheckCollisions() == false)
-		{
-			position.y = player_rect.y;
-		}
-		else
-		{
-			player_rect.y = position.y;
-		}
+		FallDown();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
+	{
+		jump_banned = false;
 	}
 
 	if (CheckDeath() == true)
 	{
 		position = App->map->current_spawn_point;
+		jump_banned = false;
+		grounded = true;
 	}
 
 	return ret;
@@ -195,6 +183,44 @@ bool j1Player::CheckWin()
 	}
 
 	return ret;
+}
+
+void j1Player::FallDown()
+{
+	player_rect.y += gravity;
+	if (CheckCollisions() == false)
+	{
+		grounded = false;
+		position.y = player_rect.y;
+	}
+	else
+	{
+		grounded = true;
+		player_rect.y = position.y;
+	}
+}
+
+void j1Player::Jump()
+{
+	player_rect.y -= jump_force;
+	if (CheckCollisions() == false)
+	{
+		position.y = player_rect.y;
+	}
+	else
+	{
+		player_rect.y = position.y;
+	}
+	if (jump_distance <= current_jump_distance)
+	{
+		jump_banned = true;
+		current_jump_distance = 0;
+		FallDown();
+	}
+	else
+	{
+		current_jump_distance += jump_force;
+	}
 }
 
 // Save & Load ------------------------------

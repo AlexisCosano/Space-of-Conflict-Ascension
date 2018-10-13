@@ -38,6 +38,8 @@ public:
 
  private:
 
+	 p2Point<int> offset;
+
 };
 
 #endif // __j1SCENE_H__

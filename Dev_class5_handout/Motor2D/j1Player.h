@@ -45,18 +45,21 @@ public:
 	SDL_Rect player_rect;
 	p2Point<int> position;
 	SDL_Texture* texture = nullptr;
-
+	
 	int speed;
-	int direction;
 	int gravity;
+	int direction;
 	int jump_force;
 	int jump_distance;
 	int current_jump_distance;
 
-	bool jumping;
+	bool jump_banned;
 
 private:
+	void FallDown();
+	void Jump();
 	int current_map = 1;
+	bool grounded = false;
 };
 
 #endif //__j1PLAYER_H__

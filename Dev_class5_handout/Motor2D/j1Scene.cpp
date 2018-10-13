@@ -39,6 +39,9 @@ bool j1Scene::Start()
 	player->texture = App->tex->Load("textures/placeholder.png");
 	player->position = App->map->current_spawn_point;
 
+	offset.x = 50;
+	offset.y = 50;
+
 	return true;
 }
 
@@ -73,6 +76,9 @@ bool j1Scene::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 10;
+
+	App->render->camera.x = ((-player->position.x * App->win->GetScale()) + (offset.x * App->win->GetScale()));
+	App->render->camera.y = ((-player->position.y * App->win->GetScale()) + (offset.y * App->win->GetScale()));
 
 	App->map->Draw();
 
