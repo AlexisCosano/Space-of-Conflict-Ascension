@@ -10,14 +10,14 @@
 j1Audio::j1Audio() : j1Module()
 {
 	music = NULL;
-	 name.create("audio");
+	name.create("audio");
 }
 
 // Destructor
 j1Audio::~j1Audio()
 {}
 
-// Called before render is available
+// Render disponible
 bool j1Audio::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Audio Mixer");
@@ -31,7 +31,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	// load support for the JPG and PNG image formats
+	// carga soporte para el JPG y PNG
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
@@ -42,18 +42,22 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	//Initialize SDL_mixer
+	//Inicia SDL_mixer
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
-		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+		 LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		active = false;
 		ret = true;
 	}
 
+
+	LoadFx("audio/fx/hai.wav");
+	LoadFx("audio/fx/nye2.wav");
+	PlayMusic("audio/music/Song.ogg");
 	return ret;
 }
 
-// Called before quitting
+// Llama antes de salir
 bool j1Audio::CleanUp()
 {
 	if(!active)
@@ -79,7 +83,7 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
-// Play a music file
+// Reproduce la musica
 bool j1Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
@@ -98,7 +102,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 			Mix_HaltMusic();
 		}
 
-		// this call blocks until fade out is done
+		// llama a los bloques antes del fadeout
 		Mix_FreeMusic(music);
 	}
 
@@ -133,7 +137,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-// Load WAV
+// Carga el WAV pon el que tu quieras
 unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
@@ -156,7 +160,7 @@ unsigned int j1Audio::LoadFx(const char* path)
 	return ret;
 }
 
-// Play WAV
+// Reproduce el WAV
 bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;

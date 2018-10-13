@@ -10,28 +10,28 @@
 struct _Mix_Music;
 struct Mix_Chunk;
 
- class j1Audio : public j1Module
+class j1Audio : public j1Module
 {
 public:
 
-	j1Audio();
+	 j1Audio();
 
 	// Destructor
 	virtual ~j1Audio();
 
-	// Called before render is available
+	// Llamada al render antes
 	bool Awake(pugi::xml_node&);
 
-	// Called before quitting
+	// Llama antes de quitarlo
 	bool CleanUp();
 
-	// Play a music file
+	//Repdoruce el archivo de musica
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
 
-	// Load a WAV in memory
+	//Carga el WAV en memoria
 	unsigned int LoadFx(const char* path);
 
-	// Play a previously loaded WAV
+	// Reproduce un WAV cargado antes
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 private:

@@ -9,7 +9,7 @@
 template<class tdata>
 struct p2List_item
 {
-	 tdata                 data;
+	tdata                 data;
 	p2List_item<tdata>*   next;
 	p2List_item<tdata>*   prev;
 
@@ -35,7 +35,7 @@ public:
 	p2List_item<tdata>*   start;
 	p2List_item<tdata>*   end;
 
-private:
+ private:
 
 	unsigned int  size;
 

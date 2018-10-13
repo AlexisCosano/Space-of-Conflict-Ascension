@@ -2,25 +2,36 @@
 #include "j1Input.h"
 #include "j1Render.h"
 #include "j1Collisions.h"
+#include "j1Player.h"
+#include "j1Map.h"
 
 j1Collisions::j1Collisions()
 {
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 		colliders[i] = nullptr;
-	matrix[COLLIDER_WALL][COLLIDER_WALL] = false;
-	matrix[COLLIDER_WALL][COLLIDER_PLAYER] = true;
 
-	matrix[COLLIDER_PLAYER][COLLIDER_PLAYER] = false;
-	 matrix[COLLIDER_PLAYER][COLLIDER_WALL] = true;
+	matrix[COLLIDER_BONE][COLLIDER_BONE] = false;
+	matrix[COLLIDER_BONE][COLLIDER_DEADLY] = false;
+	matrix[COLLIDER_BONE][COLLIDER_PLAYER] = true;
+
+	 matrix[COLLIDER_PLAYER][COLLIDER_PLAYER] = false;
+	matrix[COLLIDER_PLAYER][COLLIDER_BONE] = true;
+	matrix[COLLIDER_PLAYER][COLLIDER_DEADLY] = true;
+
+	matrix[COLLIDER_DEADLY][COLLIDER_DEADLY] = false;
+	matrix[COLLIDER_DEADLY][COLLIDER_BONE] = false;
+	matrix[COLLIDER_DEADLY][COLLIDER_PLAYER] = true;
 }
 
 // Destructor
 j1Collisions::~j1Collisions()
 {}
 
+
+
 bool j1Collisions::PreUpdate()
 {
-	// Remove all colliders scheduled for deletion
+	// Quita los coliders
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] != nullptr && colliders[i]->to_delete == true)
@@ -33,41 +44,66 @@ bool j1Collisions::PreUpdate()
 	return true;
 }
 
-// Called before render is available
-bool j1Collisions::PostUpdate()
+// Llama al rtender antes de que este disponible
+bool j1Collisions::Update(float dt)
 {
-	Collider* c1;
-	Collider* c2;
+	Collider* c;
 
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
-		// skip empty colliders
-		if (colliders[i] == nullptr)
-			continue;
-
-		c1 = colliders[i];
-
-		// avoid checking collisions already checked
-		for (uint k = i + 1; k < MAX_COLLIDERS; ++k)
-		{
-			// skip empty colliders
-			if (colliders[k] == nullptr)
+			// Salta los colliders vacios y de jugador
+			if (colliders[i] == nullptr || colliders[i]->type == COLLIDER_NONE || colliders[i]->type == COLLIDER_PLAYER)
 				continue;
 
-			c2 = colliders[k];
-
-			if (c1->CheckCollision(c2->rect) == true)
+			if (colliders[i]->type == COLLIDER_BONE || colliders[i]->type == COLLIDER_DEADLY)
 			{
+				c = colliders[i];
 
-				if (matrix[c1->type][c2->type])
-					c1->OnCollision(c1, c2);
+				if (App->player->collider->CheckCollision(c->rect) == true)
+				{
 
+					if (matrix[App->player->collider->type][c->type])
+					{
+						if (c->type == COLLIDER_DEADLY)
+						{
+							App->player->dead = true;
+						}
+						else if (c->type == COLLIDER_BONE)
+						{
+							if(App->map->map == 0)
+							{ 
+								//App->map->Load("Level 2 final"); //Mapa 2 no hecho
+								App->map->map = 1;
+							}
+							if (App->map->map == 1)
+							{
+								// Ganas si llegas hasta aqui
+							}
+						}
+					}
 
-				if (matrix[c2->type][c1->type])
-					c2->OnCollision(c2, c1);
-
+				}
 			}
-		}
+			else if (colliders[i]->type == COLLIDER_GROUND && App->player->collider->rect.y + App->player->collider->rect.h > colliders[i]->rect.y)
+			{
+				colliders[i]->type = COLLIDER_WALL;
+			}
+			else if (colliders[i]->type == COLLIDER_WALL && App->player->collider->rect.y + App->player->collider->rect.h < colliders[i]->rect.y + colliders[i]->rect.h && App->player->collider->rect.y + App->player->collider->rect.h < colliders[i]->rect.y)
+			{
+				colliders[i]->type = COLLIDER_GROUND;
+			}
+			
+			if (colliders[i]->type == COLLIDER_GROUND && colliders[i]->WillCollideGround(App->player->collider->rect, 1))
+				App->player->contact.y = 1;
+
+			if (colliders[i]->type == COLLIDER_WALL && colliders[i]->WillCollideTop(App->player->collider->rect, 1))
+				App->player->contact.y = 2;
+			
+			if (colliders[i]->type == COLLIDER_WALL && colliders[i]->WillCollideLeft(App->player->collider->rect, 1))
+				App->player->contact.x = 1;
+
+			if (colliders[i]->type == COLLIDER_WALL && colliders[i]->WillCollideRight(App->player->collider->rect, 1))
+				App->player->contact.x = 2;
 	}
 
 	DebugDraw();
@@ -77,7 +113,7 @@ bool j1Collisions::PostUpdate()
 
 void j1Collisions::DebugDraw()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
 
 	if (debug == false)
@@ -91,20 +127,29 @@ void j1Collisions::DebugDraw()
 
 		switch (colliders[i]->type)
 		{
-		case COLLIDER_NONE: // white
+		case COLLIDER_NONE: // blanco
 			App->render->DrawQuad(colliders[i]->rect, 255, 255, 255, alpha, false);
 			break;
-		case COLLIDER_WALL: // blue
-			App->render->DrawQuad(colliders[i]->rect, 0, 0, 255, alpha, true);
+		case COLLIDER_PLAYER: // cian
+			App->render->DrawQuad(colliders[i]->rect, 0, 255, 255, alpha, false);
 			break;
-		case COLLIDER_PLAYER: // green
-			App->render->DrawQuad(colliders[i]->rect, 0, 255, 0, alpha, true);
+		case COLLIDER_WALL: // verde
+			App->render->DrawQuad(colliders[i]->rect, 0, 255, 0, alpha, false);
+			break;
+		case COLLIDER_GROUND: // azul
+			App->render->DrawQuad(colliders[i]->rect, 0, 0, 255, alpha, false);
+			break;
+		case COLLIDER_DEADLY: // rojo
+			App->render->DrawQuad(colliders[i]->rect, 255, 0, 0, alpha, true);
+			break;
+		case COLLIDER_BONE: 
+			App->render->DrawQuad(colliders[i]->rect, 255, 255, 255, alpha, true);
 			break;
 		}
 	}
 }
 
-// Called before quitting
+// Llama antes de quitar
 bool j1Collisions::CleanUp()
 {
 	LOG("Freeing all colliders");
@@ -164,9 +209,9 @@ bool Collider::CheckCollision(const SDL_Rect& r) const
 	}
 }
 
-bool Collider::WillCollideX(const SDL_Rect& r, int speed_x) const
+bool Collider::WillCollideLeft(const SDL_Rect& r, int distance) const
 {
-	if (r.y + r.h > rect.y && r.y < rect.y + rect.h && r.x + r.w > rect.x + speed_x && r.x < rect.x + rect.w + speed_x)
+	if (r.y + r.h > rect.y && r.y < rect.y + rect.h && r.x < rect.x + rect.w + distance && r.x + r.w > rect.x)
 	{
 		return true;
 	}
@@ -177,9 +222,9 @@ bool Collider::WillCollideX(const SDL_Rect& r, int speed_x) const
 	}
 }
 
-bool Collider::WillCollideY(const SDL_Rect& r, int speed_y) const
+bool Collider::WillCollideRight(const SDL_Rect& r, int distance) const
 {
-	if (r.y + r.h > rect.y - speed_y && r.y < rect.y + rect.h + speed_y && r.x + r.w > rect.x && r.x < rect.x + rect.w)
+	if (r.y + r.h > rect.y && r.y < rect.y + rect.h && r.x + r.w > rect.x - distance && r.x < rect.x + rect.w)
 	{
 		return true;
 	}
@@ -188,4 +233,47 @@ bool Collider::WillCollideY(const SDL_Rect& r, int speed_y) const
 	{
 		return false;
 	}
+}
+
+bool Collider::WillCollideGround(const SDL_Rect& r, int distance) const
+{
+	if (r.y < rect.y + rect.h && r.y + r.h > rect.y - distance && r.x + r.w > rect.x && r.x < rect.x + rect.w)
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+bool Collider::WillCollideTop(const SDL_Rect& r, int distance) const
+{
+	if (r.y + r.h > rect.y && r.y < rect.y + rect.h + distance && r.x + r.w > rect.x && r.x < rect.x + rect.w)
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+bool j1Collisions::WillCollideAfterSlide(const SDL_Rect& r, int distance) const
+{
+	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	{
+		// Salta los colliders vacios y del jugador
+		if (colliders[i] == nullptr || colliders[i]->type == COLLIDER_NONE || colliders[i]->type == COLLIDER_PLAYER)
+			continue;
+
+		if (colliders[i]->type == COLLIDER_WALL && colliders[i]->WillCollideTop(r, distance))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

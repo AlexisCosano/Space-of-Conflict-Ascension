@@ -20,9 +20,9 @@ j1Render::~j1Render()
 {}
 
 // Called before render is available
- bool j1Render::Awake(pugi::xml_node& config)
+bool j1Render::Awake(pugi::xml_node& config)
 {
-	LOG("Create SDL rendering context");
+	 LOG("Create SDL rendering context");
 	bool ret = true;
 	// load flags
 	Uint32 flags = SDL_RENDERER_ACCELERATED;
@@ -87,25 +87,6 @@ bool j1Render::CleanUp()
 	return true;
 }
 
-// Load Game State
-bool j1Render::Load(pugi::xml_node& data)
-{
-	camera.x = data.child("camera").attribute("x").as_int();
-	camera.y = data.child("camera").attribute("y").as_int();
-
-	return true;
-}
-
-// Save Game State
-bool j1Render::Save(pugi::xml_node& data) const
-{
-	pugi::xml_node cam = data.append_child("camera");
-
-	cam.append_attribute("x") = camera.x;
-	cam.append_attribute("y") = camera.y;
-
-	return true;
-}
 
 void j1Render::SetBackgroundColor(SDL_Color color)
 {
@@ -136,14 +117,14 @@ bool j1Render::Blit(SDL_Texture* texture, int x, int y, float size_scaling, cons
 	{
 		rect.w = section->w * size_scaling;
 		rect.h = section->h * size_scaling;
+		rect.w *= scale;
+		rect.h *= scale;
 	}
 	else
 	{
 		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	}
 
-	rect.w *= scale;
-	rect.h *= scale;
 
 	SDL_Point* p = NULL;
 	SDL_Point pivot;

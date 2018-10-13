@@ -11,11 +11,13 @@
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 enum COLLIDER_TYPE
 {
-	 COLLIDER_NONE = -1,
+	COLLIDER_NONE = -1,
 	COLLIDER_WALL,
+	COLLIDER_GROUND,
+    	COLLIDER_BONE,
+	COLLIDER_DEADLY,
 	COLLIDER_PLAYER,
-
-	COLLIDER_MAX
+	COLLIDER_MAX,
 };
 
 struct Collider
@@ -42,9 +44,12 @@ struct Collider
 	}
 
 	bool CheckCollision(const SDL_Rect& r) const;
-	bool WillCollideX(const SDL_Rect& r, int speed_x = 0) const;
-	bool WillCollideY(const SDL_Rect& r, int speed_y = 0) const;
-	void OnCollision(Collider*, Collider*) {}
+	bool WillCollideLeft(const SDL_Rect& r, int distance) const;
+	bool WillCollideRight(const SDL_Rect& r, int distance) const;
+	bool WillCollideGround(const SDL_Rect& r, int distance) const;
+	bool WillCollideTop(const SDL_Rect& r, int distance) const;
+
+
 };
 
 class j1Collisions : public j1Module
@@ -54,10 +59,12 @@ public:
 	j1Collisions();
 	~j1Collisions();
 
+	bool Update(float dt);
 	bool PreUpdate();
-	bool PostUpdate();
 	bool CleanUp();
 	void Erase_Non_Player_Colliders();
+
+	bool WillCollideAfterSlide(const SDL_Rect& r, int distance) const; //Comprueba si algun collider choca contra el suelo
 
 	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type);
 

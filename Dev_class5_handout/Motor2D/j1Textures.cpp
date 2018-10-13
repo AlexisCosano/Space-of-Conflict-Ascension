@@ -21,9 +21,9 @@ bool j1Textures::Awake(pugi::xml_node& config)
 {
 	LOG("Init Image library");
 	bool ret = true;
-	// load support for the PNG image format
-	 int flags = IMG_INIT_PNG;
-	int init = IMG_Init(flags);
+	// para el PNG
+	int flags = IMG_INIT_PNG;
+	 int init = IMG_Init(flags);
 
 	if((init & flags) != flags)
 	{

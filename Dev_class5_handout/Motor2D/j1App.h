@@ -27,13 +27,13 @@ public:
 	virtual ~j1App();
 
 	// Called before render is available
-	 bool Awake();
+	bool Awake();
 
 	// Called before the first frame
 	bool Start();
-
+ 
 	// Called each loop iteration
-	bool Update();
+	 bool Update();
 
 	// Called before quitting
 	bool CleanUp();

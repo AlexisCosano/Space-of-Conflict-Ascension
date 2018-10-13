@@ -13,7 +13,7 @@ public:
 	int name;
 
 private:
-	 float current_frame = 0.0f;
+	float current_frame = 0.0f;
 	int last_frame = 0;
 	int loops = 0;
 
@@ -33,7 +33,7 @@ public:
 		frames[last_frame++] = rect;
 	}
 
-	SDL_Rect& GetCurrentFrame()
+	 SDL_Rect& GetCurrentFrame()
 	{
 			current_frame += speed;
 			if (current_frame >= last_frame)

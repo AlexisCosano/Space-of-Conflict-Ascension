@@ -14,13 +14,13 @@ j1Map::j1Map() : j1Module(), map_loaded(false)
 }
 
 // Destructor
- j1Map::~j1Map()
+j1Map::~j1Map()
 {}
 
-// Called before render is available
+// Llama al render antes de que este disponible
 bool j1Map::Awake(pugi::xml_node& config)
 {
-	LOG("Loading Map Parser");
+	 LOG("Loading Map Parser");
 	bool ret = true;
 
 	folder.create(config.child("folder").child_value());
@@ -31,11 +31,10 @@ bool j1Map::Awake(pugi::xml_node& config)
 
 void j1Map::CreateColliders()
 {
-	if(map_loaded == false)
-		return;
-
-	// TODO 5: Prepare the loop to draw all tilesets + Blit
 	int counter = 0;
+	
+	    App->collision->AddCollider({data.bone_position.x, data.bone_position.y,bone_rect.w, bone_rect.h }, COLLIDER_BONE);
+
 		while (counter < data.layer_array.At(1)->data->height*data.layer_array.At(1)->data->width)
 		{
 			int id = data.layer_array.At(1)->data->data[counter]; //devuelve el tipo de tileset
@@ -43,14 +42,18 @@ void j1Map::CreateColliders()
 			int y = data.layer_array.At(1)->data->width;
 			Get(&x, &y); 
 
-			//Now, x and y are the coordinates of the tileset
+			//X e Y son las coordenadas del tileset
 			
 			convert_to_real_world(&x, &y);
 
-			//Now they are in pixels
-			if(id == 11 || id == 12)
+			//Ahora estan en pixels
+			if(id == 11)
 			{ 
 				App->collision->AddCollider({ x,y,data.tilesets.At(0)->data->tile_width, data.tilesets.At(0)->data->tile_height }, COLLIDER_WALL);
+			}
+			if (id == 12)
+			{
+				App->collision->AddCollider({ x,y,data.tilesets.At(0)->data->tile_width, data.tilesets.At(0)->data->tile_height }, COLLIDER_DEADLY);
 			}
 			counter++;
 		}
@@ -63,34 +66,34 @@ void j1Map::Draw()
 
 
 	//Blit background
-     App->render->Blit(data.background_image, data.background_offset.x, data.background_offset.y);
+     App->render->Blit(data.background_image, data.background_offset.x - App->player->player_x_displacement * data.parallax_speed, data.background_offset.y);
 
 
-	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	//Blit bone
+	 App->render->Blit(App->player->graphics, data.bone_position.x, data.bone_position.y, 1 , &bone_rect);
+
+
 	int counter = 0;
-		while (counter < data.layer_array.At(0)->data->height*data.layer_array.At(0)->data->width)
+		while (counter < data.layer_array.At(0)->data->height * data.layer_array.At(0)->data->width)
 		{
 			int id = data.layer_array.At(0)->data->data[counter]; //devuelve el tipo de tileset
-			int x = counter;
-			int y = data.layer_array.At(0)->data->width;
-			Get(&x, &y);
 
-			//Now, x and y are the coordinates of the tileset
+			if(id != 0)
+			{ 
+				int x = counter;
+				int y = data.layer_array.At(0)->data->width;
+				Get(&x, &y);
 
-			convert_to_real_world(&x, &y);
+				//X e Y son coordenadas del tileset
 
-			//Now they are in pixels
+				convert_to_real_world(&x, &y);
 
-			//App->render->Blit(data.tilesets.At(0)->data->texture, x, y, &data.tilesets.At(0)->data->GetTileRect(id));
+				//Aqui en pixels
 		
 				App->render->Blit(data.tilesets.At(0)->data->texture, x, y, 1, &Tile_Rect(id));
+			}
 			counter++;
 		}
-
-
-		
-		// TODO 9: Complete the draw function
-	
 }
 
 
@@ -140,7 +143,7 @@ bool j1Map::CleanUp()
 {
 	LOG("Unloading map");
 
-	// Remove all tilesets
+	// Quita los tilesets
 	p2List_item<TileSet*>* item;
 	item = data.tilesets.start;
 
@@ -151,11 +154,6 @@ bool j1Map::CleanUp()
 	}
 	data.tilesets.clear();
 	data.layer_array.clear();
-	// TODO 2: clean up all layer data
-	// Remove all layers
-
-
-	// Clean up the pugui tree
 	map_file.reset();
 
 	return true;
@@ -203,8 +201,6 @@ bool j1Map::Load(const char* file_name)
 
 		data.tilesets.add(set);
 	}
-
-	// TODO 4: Iterate all layers and load each of them
 	// Load layer info ----------------------------------------------
 	LoadLayer(map_file);
 
@@ -224,9 +220,6 @@ bool j1Map::Load(const char* file_name)
 			LOG("spacing: %d margin: %d", s->spacing, s->margin);
 			item = item->next;
 		}
-
-		// TODO 4: Add info here about your loaded layers
-		// Adapt this vcode with your own variables
 		
 		p2List_item<MapLayer*>* item_layer = data.layer_array.start;
 		while(item_layer != NULL)
@@ -239,18 +232,23 @@ bool j1Map::Load(const char* file_name)
 		}
 	}
 
-	//Set player starting position
+	if (ret = true)
+	{
+		CreateColliders();
+	}
 
+    //Posicion inicial del jugador
 	App->player->position.x = data.player_starting_value.x;
 	App->player->position.y = data.player_starting_value.y;
 
+	
 
 	map_loaded = ret;
 
 	return ret;
 }
 
-// Load map general properties
+// Carga las propiedades generales del mapa
 bool j1Map::LoadMap()
 {
 	bool ret = true;
@@ -377,7 +375,6 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	return ret;
 }
 
-// TODO 3: Create the definition for a function that loads a single layer
 bool j1Map::LoadLayer(pugi::xml_node& node)
 {
 	pugi::xml_node layer = node.child("map").child("layer");
@@ -421,11 +418,43 @@ bool j1Map::LoadBackground(pugi::xml_node& node)
 }
 bool j1Map::LoadMapPropierties(pugi::xml_node& node)
 {
-	data.parallax_speed = node.child("map").attribute("parallax_speed").as_float();
+	pugi::xml_node iterator = node.child("map").child("properties").child("property");
+	while (iterator != nullptr)
+	{ 
+		p2SString name = iterator.attribute("name").as_string();
 
-	data.player_starting_value.x = node.child("map").attribute("player_starting_value.x").as_int();
+		if(name == "parallax_speed")
+		{ 
+			data.parallax_speed = iterator.attribute("value").as_float();
+		}
 
-	data.player_starting_value.y = node.child("map").attribute("player_starting_value.y").as_int();
+		if (name == "player_starting_valuex")
+		{
+			data.player_starting_value.x = iterator.attribute("value").as_float();
+		}
+
+		if (name == "player_starting_valuey")
+		{
+			data.player_starting_value.y = iterator.attribute("value").as_float();
+		}
+
+		if( name == "camera_y_limit")
+		{ 
+		    data.camera_y_limit = iterator.attribute("value").as_float();
+		}
+
+		if (name == "bone_positionx")
+		{
+			data.bone_position.x = iterator.attribute("value").as_float();
+		}
+
+		if (name == "bone_positiony")
+		{
+			data.bone_position.y = iterator.attribute("value").as_int();
+		}
+
+		iterator = iterator.next_sibling();
+	}
 
 	return true;
 }

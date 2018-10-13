@@ -31,7 +31,7 @@
 #	ifdef PUGIXML_NO_EXCEPTIONS
 #		include <setjmp.h>
 #	endif
- #endif
+#endif
 
 #ifndef PUGIXML_NO_STL
 #	include <istream>
@@ -59,7 +59,7 @@
 #	pragma warning(disable: 1684) // conversion from pointer to same-sized integral type
 #endif
 
-#if defined(__BORLANDC__) && defined(PUGIXML_HEADER_ONLY)
+ #if defined(__BORLANDC__) && defined(PUGIXML_HEADER_ONLY)
 #	pragma warn -8080 // symbol is declared but never used; disabling this inside push/pop bracket does not make the warning go away
 #endif
 

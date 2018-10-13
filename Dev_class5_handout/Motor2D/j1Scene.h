@@ -24,7 +24,7 @@ public:
 	bool PreUpdate();
 
 	// Called each loop iteration
-	 bool Update(float dt);
+	bool Update(float dt);
 
 	// Called before all Updates
 	bool PostUpdate();
@@ -32,7 +32,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-private:
+ private:
 };
 
 #endif // __j1SCENE_H__

@@ -18,17 +18,40 @@ public:
 	bool Start();
 	bool PostUpdate();
 	
-	 void Jump();
+
+	// Load / Save
+	bool Load(pugi::xml_node&);
+	 bool Save(pugi::xml_node&) const;
+
+	void WallSlide();
+	void Jump();
+	void Slide();
 
 public:
 
 	Collider* collider;
-	Collider* colliderground;
-	Collider* colliderground2;
-	bool allowtime = true;
+	Collider* spike_test_collider; // Just to test deadly colliders
+
+	SDL_Rect rect_after_sliding;
 	Uint32 time = 0;
+	bool allowtime = true;
+
+	float player_height_before_sliding;
 	bool jumping = false;
+	bool walljumping = false;
 	bool flip = false;
+	bool StickToWall = false;
+	bool dead = false;
+	bool sliding = false;
+	int jcontact = 0; 
+
+	iPoint contact; 
+	fPoint speed;
+	fPoint position;
+	iPoint sprite_distance;
+	float gravity;
+	float player_x_displacement;
+
 
 public:
 
@@ -40,8 +63,8 @@ public:
 	Animation fall;
 	Animation death;
 	Animation slide;
-	iPoint position;
-	iPoint sprite_distance;
+	Animation wallslideright;
+	Animation wallslideleft;
 
 };
 

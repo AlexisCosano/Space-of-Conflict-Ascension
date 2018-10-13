@@ -11,7 +11,7 @@ struct SDL_Rect;
 
 enum j1EventWindow
 {
-	 WE_QUIT = 0,
+	WE_QUIT = 0,
 	WE_HIDE = 1,
 	WE_SHOW = 2,
 	WE_COUNT
@@ -19,7 +19,7 @@ enum j1EventWindow
 
 enum j1KeyState
 {
-	KEY_IDLE = 0,
+	 KEY_IDLE = 0,
 	KEY_DOWN,
 	KEY_REPEAT,
 	KEY_UP
@@ -35,22 +35,22 @@ public:
 	// Destructor
 	virtual ~j1Input();
 
-	// Called before render is available
+	//Llama al render antes de que este dispoinible
 	bool Awake(pugi::xml_node&);
 
-	// Called before the first frame
+	//Llama antes de cargar primer frame
 	bool Start();
 
-	// Called each loop iteration
+	// LLama a cada loop iteracion
 	bool PreUpdate();
 
-	// Called before quitting
+	// Llama antes de salir
 	bool CleanUp();
 
-	// Gather relevant win events
+	// Reune los eventos win
 	bool GetWindowEvent(j1EventWindow ev);
 
-	// Check key states (includes mouse and joy buttons)
+	// Chequea los key states(mouse y joy incluidos)
 	j1KeyState GetKey(int id) const
 	{
 		return keyboard[id];
@@ -61,10 +61,10 @@ public:
 		return mouse_buttons[id - 1];
 	}
 
-	// Check if a certain window event happened
+	// Chequea si cierto evento de window a sucedido
 	bool GetWindowEvent(int code);
 
-	// Get mouse / axis position
+	// Mouse/axis posicion
 	void GetMousePosition(int &x, int &y);
 	void GetMouseMotion(int& x, int& y);
 

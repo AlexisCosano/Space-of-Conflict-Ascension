@@ -19,13 +19,13 @@ private:
 public:
 
 	// Constructors
-	 p2SString()
+	p2SString()
 	{
 		Alloc(1);
 		Clear();
 	}
 
-	p2SString(unsigned int size)
+	 p2SString(unsigned int size)
 	{
 		if(size > 0)
 			Alloc(size);

@@ -11,7 +11,7 @@ j1Input::j1Input() : j1Module()
 {
 	name.create("input");
 
-	 keyboard = new j1KeyState[MAX_KEYS];
+	keyboard = new j1KeyState[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(j1KeyState) * MAX_KEYS);
 	memset(mouse_buttons, KEY_IDLE, sizeof(j1KeyState) * NUM_MOUSE_BUTTONS);
 }
@@ -19,10 +19,10 @@ j1Input::j1Input() : j1Module()
 // Destructor
 j1Input::~j1Input()
 {
-	delete[] keyboard;
+	 delete[] keyboard;
 }
 
-// Called before render is available
+// Llama al render antes de que este disponible
 bool j1Input::Awake(pugi::xml_node& config)
 {
 	LOG("Init SDL input event system");
@@ -38,14 +38,14 @@ bool j1Input::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-// Called before the first frame
+// LLama antes del primer frame
 bool j1Input::Start()
 {
 	SDL_StopTextInput();
 	return true;
 }
 
-// Called each loop iteration
+//LLama a cada loop iteracion
 bool j1Input::PreUpdate()
 {
 	static SDL_Event event;
@@ -90,14 +90,14 @@ bool j1Input::PreUpdate()
 			case SDL_WINDOWEVENT:
 				switch(event.window.event)
 				{
-					//case SDL_WINDOWEVENT_LEAVE:
+					
 					case SDL_WINDOWEVENT_HIDDEN:
 					case SDL_WINDOWEVENT_MINIMIZED:
 					case SDL_WINDOWEVENT_FOCUS_LOST:
 					windowEvents[WE_HIDE] = true;
 					break;
 
-					//case SDL_WINDOWEVENT_ENTER:
+				
 					case SDL_WINDOWEVENT_SHOWN:
 					case SDL_WINDOWEVENT_FOCUS_GAINED:
 					case SDL_WINDOWEVENT_MAXIMIZED:
@@ -109,12 +109,12 @@ bool j1Input::PreUpdate()
 
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[event.button.button - 1] = KEY_DOWN;
-				//LOG("Mouse button %d down", event.button.button-1);
+				
 			break;
 
 			case SDL_MOUSEBUTTONUP:
 				mouse_buttons[event.button.button - 1] = KEY_UP;
-				//LOG("Mouse button %d up", event.button.button-1);
+				
 			break;
 
 			case SDL_MOUSEMOTION:
@@ -123,7 +123,7 @@ bool j1Input::PreUpdate()
 				mouse_motion_y = event.motion.yrel / scale;
 				mouse_x = event.motion.x / scale;
 				mouse_y = event.motion.y / scale;
-				//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
+				
 			break;
 		}
 	}

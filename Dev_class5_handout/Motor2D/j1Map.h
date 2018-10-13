@@ -6,18 +6,10 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
-// TODO 1: Create a struct for the map layer
-// ----------------------------------------------------
-
-	// TODO 6: Short function to get the value of x,y
-
-
-
-// ----------------------------------------------------
 struct TileSet
 {
-	// TODO 7: Create a method that receives a tile id and returns it's Rectfind the Rect associated with a specific tile id
-	 SDL_Rect GetTileRect(int id) const;
+
+	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
 	int					firstgid;
@@ -28,7 +20,7 @@ struct TileSet
 	SDL_Texture*		texture;
 	int					tex_width;
 	int					tex_height;
-	int					num_tiles_width;
+	 int					num_tiles_width;
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
@@ -62,11 +54,12 @@ struct MapData
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
 	p2List<MapLayer*> layer_array;
-	fPoint player_starting_value; //NEW VARIABLE, ADD IT TO XML
-	SDL_Texture* background_image; //NEW VARIABLE, ADD IT TO XML
-	float parallax_speed; //NEW VARIABLE, ADD IT TO XML
+	fPoint player_starting_value; 
+	SDL_Texture* background_image; 
+	float parallax_speed; 
+	int camera_y_limit; 
+	iPoint bone_position;
 	fPoint background_offset;
-	// TODO 2: Add a list/array of layers to the map!
 };
 
 // ----------------------------------------------------
@@ -94,7 +87,6 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-	// TODO 8: Create a method that translates x,y coordinates from map positions to world positions
 	iPoint MapToWorld(int x, int y) const;
 
 	void Get(int* x, int* y); //la x es el numero, la y cuantos elementos hay en una fila
@@ -105,8 +97,9 @@ public:
 
 	//starting map
   
-	int map = 1; //NEW VARIABLE, ADD IT TO XML
+	int map = 0; //Starting map 
 
+	SDL_Rect bone_rect = { 4513, 973,249,493 };
 
 
 private:
@@ -114,7 +107,6 @@ private:
 	bool LoadMap();
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
-	// TODO 3: Create a method that loads a single layer
 	bool LoadLayer(pugi::xml_node& node);
 	bool LoadBackground(pugi::xml_node& node);
 	bool LoadMapPropierties(pugi::xml_node& node);

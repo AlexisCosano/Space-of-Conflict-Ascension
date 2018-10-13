@@ -9,7 +9,7 @@
 
 #define DYN_ARRAY_BLOCK_SIZE 16
 
- template<class VALUE>
+template<class VALUE>
 class p2DynArray
 {
 private:
@@ -32,7 +32,7 @@ public:
 	}
 
 	// Destructor
-	~p2DynArray()
+	 ~p2DynArray()
 	{
 		delete[] data;
 	}

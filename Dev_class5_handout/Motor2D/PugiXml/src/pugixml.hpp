@@ -26,8 +26,8 @@
 #include <stddef.h>
 
 // Include exception header for XPath
- #if !defined(PUGIXML_NO_XPATH) && !defined(PUGIXML_NO_EXCEPTIONS)
-#	include <exception>
+#if !defined(PUGIXML_NO_XPATH) && !defined(PUGIXML_NO_EXCEPTIONS)
+#	 include <exception>
 #endif
 
 // Include STL headers

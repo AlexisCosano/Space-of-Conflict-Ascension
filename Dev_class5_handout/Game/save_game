@@ -5,10 +5,10 @@
 	<textures />
 	<audio />
 	<map />
-	<:anonymous />
-	<:anonymous />
+	<player>
+		<player_position x="-149.399994" y="789.5" />
+	</player>
 	<scene />
-	<renderer>
-		<camera x="-512" y="-1659" />
-	</renderer>
+	<:anonymous />
+	<renderer />
 </game_state>
