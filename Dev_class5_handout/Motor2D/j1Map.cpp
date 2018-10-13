@@ -92,7 +92,10 @@ void j1Map::Draw()
 
 				 //Aqui en pixels
 
-				 App->render->Blit(data.tilesets.At(0)->data->texture, x, y, 1, &TileRect(id, 0));
+				 for (int i = 0; i < data.tilesets.count(); i++)
+				 {
+					 App->render->Blit(data.tilesets.At(i)->data->texture, x, y, 1, &TileRect(id, i));
+				 }
 			 }
 			 counter++;
 		 }
@@ -230,7 +233,7 @@ bool j1Map::Load(const char* file_name)
 			MapLayer* l = item_layer->data;
 			LOG("Layer ----");
 			LOG("name: %s", l->name.GetString());
-			LOG("tile width: %d tile height: %d", l->width, l->height);
+			LOG("width: %d height: %d", l->width, l->height);
 			item_layer = item_layer->next;
 		}
 	}
