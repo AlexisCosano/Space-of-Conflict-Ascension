@@ -91,10 +91,12 @@ void j1Map::Draw()
 				 convert_to_real_world(&x, &y);
 
 				 //Aqui en pixels
-
-				 for (int i = 0; i < data.tilesets.count(); i++)
+				 if (data.layer_array.At(iterator)->data->properties.is_drawn == true)
 				 {
-					 App->render->Blit(data.tilesets.At(i)->data->texture, x, y, 1, &TileRect(id, i));
+					 for (int i = 0; i < data.tilesets.count(); i++)
+					 {
+						 App->render->Blit(data.tilesets.At(i)->data->texture, x, y, 1, &TileRect(id, i));
+					 }
 				 }
 			 }
 			 counter++;
@@ -473,14 +475,14 @@ bool j1Map::LoadLayerProperties(pugi::xml_node& node, LayerProperties& propertie
 	{
 		ret = true;
 		pugi::xml_attribute collider_child = property_child.attribute("name");
-		p2SString testing = collider_child.as_string();
+		p2SString name = collider_child.as_string();
 
-		if (testing == "Draw")
+		if (name == "Draw")
 		{
 			properties.is_drawn = property_child.attribute("value").as_bool();
 		}
 
-		else if (testing == "HasColliders")
+		else if (name == "HasColliders")
 		{
 			properties.has_colliders = property_child.attribute("value").as_bool();
 		}
