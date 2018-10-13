@@ -32,11 +32,11 @@ bool j1Scene::Awake()
  // Called before the first frame
 bool j1Scene::Start()
 {	
-	App->map->Load("Level1Test.tmx");
+	App->map->Load("Level2Test.tmx");
 	App->map->map = 0;
 
 	player = App->player;
-	player->texture = App->tex->Load("textures/placeholder.png");
+	player->SetTexture(App->tex->Load("textures/placeholder.png"), App->tex->Load("textures/godmode.png"));
 	player->position = App->map->current_spawn_point;
 
 	offset.x = 50;
@@ -65,6 +65,14 @@ bool j1Scene::Update(float dt)
 		App->map->ShowHiddenLayers = !App->map->ShowHiddenLayers;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+	{
+		if(App->player->god_mode == false)
+			App->player->god_mode = true;
+		else
+			App->player->god_mode = false;
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y -= 10;
 
@@ -81,8 +89,6 @@ bool j1Scene::Update(float dt)
 	App->render->camera.y = ((-player->position.y * App->win->GetScale()) + (offset.y * App->win->GetScale()));
 
 	App->map->Draw();
-
-	App->render->Blit(player->texture, player->position.x, player->position.y, 1, &SDL_Rect({ 0, 0,player->player_rect.w, player->player_rect.h }));
 
 	p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 					App->map->data.width, App->map->data.height,

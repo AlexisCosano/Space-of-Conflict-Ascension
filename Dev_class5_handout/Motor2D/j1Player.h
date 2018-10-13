@@ -35,17 +35,13 @@ public:
 	bool CheckDeath();
 	bool CheckWin();
 
-	void SetTexture(SDL_Texture* texture);
+	void SetTexture(SDL_Texture* normal_texture, SDL_Texture* god_mode_texture);
 
 	bool SavePlayerState(pugi::xml_node& node);
 	bool LoadState(pugi::xml_node& node);
 
 public:
 
-	SDL_Rect player_rect;
-	p2Point<int> position;
-	SDL_Texture* texture = nullptr;
-	
 	int speed;
 	int gravity;
 	int direction;
@@ -53,13 +49,22 @@ public:
 	int jump_distance;
 	int current_jump_distance;
 
+	SDL_Rect player_rect;
+	p2Point<int> position;
+	SDL_Texture* texture = nullptr;
+	SDL_Texture* god_mode_texture = nullptr;
+
 	bool jump_banned;
+	bool god_mode = false;
 
 private:
+	int current_map = 1;
+
+	bool grounded = false;
+	bool jumping = false;
+
 	void FallDown();
 	void Jump();
-	int current_map = 1;
-	bool grounded = false;
 };
 
 #endif //__j1PLAYER_H__

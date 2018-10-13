@@ -88,12 +88,14 @@ bool j1Player::Update(float dt)
 		direction = 1;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && grounded)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && grounded)
 	{
+		current_jump_distance = 0;
+		jumping = true;
 		Jump();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !jump_banned)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !jump_banned && jumping)
 	{
  		Jump(); 
 	}
@@ -104,29 +106,44 @@ bool j1Player::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP)
 	{
+		jumping = false;
 		jump_banned = false;
 	}
 
-	if (CheckDeath() == true)
+	if (CheckDeath() == true && god_mode == false)
 	{
 		position = App->map->current_spawn_point;
 		jump_banned = false;
 		grounded = true;
+		jumping = false;
 	}
+
+	bool flip = false;
+
+	if (direction == -1)
+	{
+		flip = true;
+	}
+
+	if(god_mode)
+		App->render->Blit(god_mode_texture, position.x, position.y, 1, &SDL_Rect({ 0, 0,player_rect.w, player_rect.h }), flip);
+	else
+		App->render->Blit(texture, position.x, position.y, 1, &SDL_Rect({ 0, 0,player_rect.w, player_rect.h }), flip);
 
 	return ret;
 }
 
 // Set texture
-void j1Player::SetTexture(SDL_Texture* texture)
+void j1Player::SetTexture(SDL_Texture* normal_texture, SDL_Texture* god_mode_texture)
 {
-	this->texture = texture;
+	this->texture = normal_texture;
+	this->god_mode_texture = god_mode_texture;
 
 	int w, h;
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
-	player_rect.h = 16;
-	player_rect.w = 27;
+	player_rect.h = h;
+	player_rect.w = w;
 }
 
 // Called before quitting --------------------
@@ -211,6 +228,7 @@ void j1Player::Jump()
 	{
 		player_rect.y = position.y;
 	}
+
 	if (jump_distance <= current_jump_distance)
 	{
 		jump_banned = true;
