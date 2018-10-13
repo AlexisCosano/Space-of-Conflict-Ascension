@@ -46,8 +46,6 @@ bool j1Player::Start()
 	contact.x = 0;
 	contact.y = 0;
 
-	collider = App->collision->AddCollider(collider_rect, COLLIDER_PLAYER);
-
 	gravity = 1;
 
 	return ret;
@@ -109,10 +107,6 @@ bool j1Player::PostUpdate()
 	App->render->camera.y = -position.y + 400;
 
 	//Put collider next to player
-	if (collider != nullptr)
-	{
-		collider->SetPos(position.x, position.y + 547 * 0.2 - App->map->data.tile_height - 1 + 50);
-	}
 
 	return true;
 }

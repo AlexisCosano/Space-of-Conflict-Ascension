@@ -1,80 +1,49 @@
 #ifndef __j1COLLISIONS_H__
 #define __j1COLLISIONS_H__
 
-#define MAX_COLLIDERS 10000
-
 #include "j1Module.h"
-#include "p2Log.h"
+#include "p2List.h"
 
-#include "SDL/include/SDL.h"
-#include "SDL_image/include/SDL_image.h"
-#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
-enum COLLIDER_TYPE
-{
-	COLLIDER_NONE = -1,
-	COLLIDER_WALL,
-	COLLIDER_GROUND,
-    	COLLIDER_BONE,
-	COLLIDER_DEADLY,
-	COLLIDER_PLAYER,
-	COLLIDER_MAX,
-};
+struct SDL_Rect;
 
-struct Collider
-{
-	SDL_Rect rect;
-	bool to_delete = false;
-	COLLIDER_TYPE type;
-
-	Collider(SDL_Rect rectangle, COLLIDER_TYPE type) :
-		rect(rectangle),
-		type(type)
-	{}
-
-	void SetPos(int x, int y)
-	{
-		rect.x = x;
-		rect.y = y;
-	}
-
-	void SetSize(int w, int h)
-	{
-		rect.w = w;
-		rect.h = h;
-	}
-
-	bool CheckCollision(const SDL_Rect& r) const;
-	bool WillCollideLeft(const SDL_Rect& r, int distance) const;
-	bool WillCollideRight(const SDL_Rect& r, int distance) const;
-	bool WillCollideGround(const SDL_Rect& r, int distance) const;
-	bool WillCollideTop(const SDL_Rect& r, int distance) const;
-
-
-};
 
 class j1Collisions : public j1Module
 {
 public:
+	p2List<SDL_Rect> no_walkable_tiles;
+	p2List<SDL_Rect> death_triggers;
+	p2List<SDL_Rect> win_triggers;
+
+	bool debug_draw;
+
+public:
 
 	j1Collisions();
-	~j1Collisions();
 
-	bool Update(float dt);
+	// Destructor
+	virtual ~j1Collisions();
+
+	// Called before render is available
+	bool Awake(pugi::xml_node&);
+
+	// Called before the first frame
+	bool Start();
+
+	// Called each loop iteration
 	bool PreUpdate();
+
+	// Called before quitting
 	bool CleanUp();
-	void Erase_Non_Player_Colliders();
 
-	bool WillCollideAfterSlide(const SDL_Rect& r, int distance) const; //Comprueba si algun collider choca contra el suelo
+	bool CheckCollision(SDL_Rect r1, SDL_Rect r2) const;
+	void NoWalkable(SDL_Rect collider);
+	void TriggerDeath(SDL_Rect death);
+	void TriggerWin(SDL_Rect victory);
+	void ClearColliders();
 
-	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type);
-
-	void DebugDraw();
-
-private:
-
-	Collider* colliders[MAX_COLLIDERS];
-	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
-	bool debug = false;
+	// Save & Load
+	bool Save(pugi::xml_node&);
+	bool Load(pugi::xml_node&);
 };
 
 #endif // __j1COLLISIONS_H__

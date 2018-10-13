@@ -87,9 +87,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	//Called to create colliders
-	void CreateColliders();
-
 	// Load new map
 	bool Load(const char* path);
 

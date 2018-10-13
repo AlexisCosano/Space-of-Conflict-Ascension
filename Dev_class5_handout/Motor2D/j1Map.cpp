@@ -29,56 +29,17 @@ bool j1Map::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-void j1Map::CreateColliders()
-{
-	int counter = 0;
-	
-	    App->collision->AddCollider({data.bone_position.x, data.bone_position.y,bone_rect.w, bone_rect.h }, COLLIDER_BONE);
-
-		while (counter < data.layer_array.At(1)->data->height*data.layer_array.At(1)->data->width)
-		{
-			int id = data.layer_array.At(1)->data->data[counter]; //devuelve el tipo de tileset
-			int x = counter; 
-			int y = data.layer_array.At(1)->data->width;
-			Get(&x, &y); 
-
-			//X e Y son las coordenadas del tileset
-			
-			convert_to_real_world(&x, &y);
-
-			//Ahora estan en pixels
-			if(id == 11)
-			{ 
-				App->collision->AddCollider({ x,y,data.tilesets.At(0)->data->tile_width, data.tilesets.At(0)->data->tile_height }, COLLIDER_WALL);
-			}
-			if (id == 12)
-			{
-				App->collision->AddCollider({ x,y,data.tilesets.At(0)->data->tile_width, data.tilesets.At(0)->data->tile_height }, COLLIDER_DEADLY);
-			}
-			counter++;
-		}
-}
-
 void j1Map::Draw()
 {
 	if (map_loaded == false)
 		return;
-
-
-	//Blit background
-     //App->render->Blit(data.background_image, data.background_offset.x - App->player->player_x_displacement * data.parallax_speed, data.background_offset.y);
-
-
-	//Blit bone
-	 //App->render->Blit(App->player->graphics, data.bone_position.x, data.bone_position.y, 1 , &bone_rect);
-
 
 	 for (int iterator = 0; iterator < data.layer_array.count(); iterator++)
 	 {
 		 int counter = 0;
 		 while (counter < data.layer_array.At(iterator)->data->height * data.layer_array.At(iterator)->data->width)
 		 {
-			 int id = data.layer_array.At(iterator)->data->data[counter]; //devuelve el tipo de tileset
+			 int id = data.layer_array.At(iterator)->data->data[counter];
 
 			 if (id != 0)
 			 {
@@ -86,11 +47,8 @@ void j1Map::Draw()
 				 int y = data.layer_array.At(iterator)->data->width;
 				 Get(&x, &y);
 
-				 //X e Y son coordenadas del tileset
-
 				 convert_to_real_world(&x, &y);
 
-				 //Aqui en pixels
 				 if (data.layer_array.At(iterator)->data->properties.is_drawn == true)
 				 {
 					 for (int i = 0; i < data.tilesets.count(); i++)
@@ -103,7 +61,6 @@ void j1Map::Draw()
 		 }
 	 }
 }
-
 
 iPoint j1Map::MapToWorld(int x, int y) const
 {
@@ -240,16 +197,9 @@ bool j1Map::Load(const char* file_name)
 		}
 	}
 
-	if (ret = true)
-	{
-		CreateColliders();
-	}
-
     //Posicion inicial del jugador
 	App->player->position.x = data.player_starting_value.x;
 	App->player->position.y = data.player_starting_value.y;
-
-	
 
 	map_loaded = ret;
 
