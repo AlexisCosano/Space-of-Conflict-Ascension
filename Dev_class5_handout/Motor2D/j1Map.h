@@ -97,13 +97,8 @@ public:
 	SDL_Rect TileRect(int tileid, int iterator);
 
 	void convert_to_real_world(int*, int*);
-
-	//starting map
   
 	int map = 0; //Starting map 
-
-	SDL_Rect bone_rect = { 4513, 973,249,493 };
-
 
 private:
 
@@ -119,6 +114,7 @@ private:
 public:
 
 	MapData data;
+	iPoint current_spawn_point;
 
 private:
 

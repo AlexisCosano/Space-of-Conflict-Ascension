@@ -36,8 +36,8 @@ bool j1Scene::Start()
 	App->map->map = 0;
 
 	player = App->player;
-	player->position.x = 50;
-	player->position.y = 50;
+	player->texture = App->tex->Load("textures/placeholder.png");
+	player->position = App->map->current_spawn_point;
 
 	return true;
 }
@@ -75,7 +75,7 @@ bool j1Scene::Update(float dt)
 	}
 
 	App->map->Draw();
-	App->render->Blit(player->graphics, player->position.x, player->position.y);
+	App->render->Blit(player->texture, player->position.x, player->position.y);
 
 	p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 					App->map->data.width, App->map->data.height,
