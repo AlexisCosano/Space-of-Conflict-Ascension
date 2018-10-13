@@ -8,7 +8,6 @@
 
 struct TileSet
 {
-
 	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
@@ -20,7 +19,7 @@ struct TileSet
 	SDL_Texture*		texture;
 	int					tex_width;
 	int					tex_height;
-	 int					num_tiles_width;
+	int				num_tiles_width;
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
