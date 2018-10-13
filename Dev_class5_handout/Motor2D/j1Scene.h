@@ -38,7 +38,6 @@ public:
 
  private:
 
-	 iPoint camera_offset;
 };
 
 #endif // __j1SCENE_H__

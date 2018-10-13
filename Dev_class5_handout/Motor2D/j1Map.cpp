@@ -25,6 +25,7 @@ bool j1Map::Awake(pugi::xml_node& config)
 
 	folder.create(config.child("folder").child_value());
 	
+	debug_mode = config.child("debug_mode").attribute("value").as_bool();
 
 	return ret;
 }
@@ -49,7 +50,7 @@ void j1Map::Draw()
 
 				 convert_to_real_world(&x, &y);
 
-				 if (data.layer_array.At(iterator)->data->properties.is_drawn == true)
+				 if (data.layer_array.At(iterator)->data->properties.is_drawn == true || (debug_mode && ShowHiddenLayers))
 				 {
 					 for (int i = 0; i < data.tilesets.count(); i++)
 					 {
@@ -59,6 +60,11 @@ void j1Map::Draw()
 			 }
 			 counter++;
 		 }
+	 }
+
+	 if (debug_mode && ShowHiddenLayers)
+	 {
+		 App->render->DrawQuad(App->player->player_rect, 20, 220, 20, 255, false, true);
 	 }
 }
 

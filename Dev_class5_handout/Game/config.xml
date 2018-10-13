@@ -7,7 +7,7 @@
   </app>
 	
   <renderer>
-    <vsync value="false"/>
+    <vsync value="true"/>
   </renderer>
 
   <window>
@@ -24,6 +24,15 @@
 
   <map>
     <folder>maps/</folder>
+	<debug_mode value="true"/>
   </map>
+  
+  <player>
+	<speed value ="2"/>
+    <gravity value ="2"/>
+    <jump_force value="4"/>
+    <jump_distance value="110"/>
+    <dash_distance value="370"/>
+  </player>
 
 </config>

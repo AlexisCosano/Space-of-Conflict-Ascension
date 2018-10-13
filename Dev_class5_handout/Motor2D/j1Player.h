@@ -44,18 +44,16 @@ public:
 
 	SDL_Rect player_rect;
 	p2Point<int> position;
-	p2Point<int> speed;
-	p2Point<int> gravity;
 	SDL_Texture* texture = nullptr;
+
+	int speed;
 	int direction;
-	int dashing_speed;
-	bool dashing;
-	float dash_distance;
-	float current_dash_distance;
-	bool jumping;
+	int gravity;
 	int jump_force;
-	float jump_distance;
-	float current_jump_distance;
+	int jump_distance;
+	int current_jump_distance;
+
+	bool jumping;
 
 private:
 	int current_map = 1;

@@ -39,9 +39,6 @@ bool j1Scene::Start()
 	player->texture = App->tex->Load("textures/placeholder.png");
 	player->position = App->map->current_spawn_point;
 
-	camera_offset.x = 2;
-	camera_offset.y = 2;
-
 	return true;
 }
 
@@ -60,24 +57,24 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		App->SaveGame();
 
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+	{
+		App->map->ShowHiddenLayers = !App->map->ShowHiddenLayers;
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->render->camera.y -= 1;
+		App->render->camera.y -= 10;
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->render->camera.y += 1;
+		App->render->camera.y += 10;
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->camera.x -= 1;
+		App->render->camera.x -= 10;
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x += 1;
+		App->render->camera.x += 10;
 
 	App->map->Draw();
-
-	/*
-	App->render->camera.x = -player->position.x + camera_offset.x;
-	App->render->camera.y = -player->position.y + camera_offset.x;
-	*/
 
 	App->render->Blit(player->texture, player->position.x, player->position.y, 1, &SDL_Rect({ 0, 0,player->player_rect.w, player->player_rect.h }));
 

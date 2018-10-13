@@ -119,12 +119,14 @@ public:
 
 	MapData data;
 	iPoint current_spawn_point;
+	bool ShowHiddenLayers = false;
 
 private:
 
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
+	bool                debug_mode;
 };
 
 #endif // __j1MAP_H__

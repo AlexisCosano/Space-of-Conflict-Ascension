@@ -12,28 +12,14 @@
 
 j1Player::j1Player() : j1Module()
 {
-	name.create("player");
-
-	position.SetToZero();
-
-	speed.x = 1;
-	speed.y = 1;
-
-	dash_distance = 370.f;
-	current_dash_distance = 0.f;
-
-	gravity.x = 0;
-	gravity.y = 2;
+	name.create("player");	
 
 	player_rect = { 0, 0, 16, 27 };
 
 	direction = 1; // 1 - right, -1 - left
 
 	jumping = false;
-	dashing = false;
-	jump_force = 1;
-	jump_distance = 70.f;
-	current_jump_distance = 0.f;
+	current_jump_distance = 0;
 }
 
 // Destructor ---------------------------------
@@ -42,12 +28,20 @@ j1Player::~j1Player()
 }
 
 // Called before render is available ----------
-bool j1Player::Awake(pugi::xml_node&)
+bool j1Player::Awake(pugi::xml_node& config)
 {
 	LOG("Init player");
 	bool ret = true;
 	current_map = 1;
+
+	position.SetToZero();
 	LOG(" INITIAL Position = (%i, %i)", position.x, position.y);
+
+	speed = config.child("speed").attribute("value").as_int();
+	gravity = config.child("gravity").attribute("value").as_int();
+	jump_force = config.child("jump_force").attribute("value").as_int();
+	jump_distance = config.child("jump_distance").attribute("value").as_int();
+
 	return ret;
 }
 
@@ -62,7 +56,7 @@ bool j1Player::Update(float dt)
 	// Player Controls
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		player_rect.x -= 1 * speed.x;
+		player_rect.x -= 1 * speed;
 		if (CheckCollisions() == false)
 		{
 			position.x = player_rect.x;
@@ -76,7 +70,7 @@ bool j1Player::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		player_rect.x += 1 * speed.x;
+		player_rect.x += 1 * speed;
 		if (CheckCollisions() == false)
 		{
 			position.x = player_rect.x;
@@ -116,7 +110,7 @@ bool j1Player::Update(float dt)
 	}
 	else
 	{
-		player_rect.y += gravity.y;
+		player_rect.y += gravity;
 		if (CheckCollisions() == false)
 		{
 			position.y = player_rect.y;
