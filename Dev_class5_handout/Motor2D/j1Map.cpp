@@ -333,6 +333,110 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	return ret;
 }
 
+void j1Map::SpawnPoint(MapLayer* layer)
+{
+	int counter = 0;
+	while (counter < layer->height * layer->width)
+	{
+		int id = layer->data[counter];
+
+		if (id > 0)
+		{
+			int x = counter;
+			int y = layer->width;
+			Get(&x, &y);
+
+			TileSet* tileset = data.tilesets.start->data;
+
+			iPoint pos = MapToWorld(x, y);
+
+			current_spawn_point = pos;
+		}
+		counter++;
+	}
+}
+
+void j1Map::NoWalkable(MapLayer* layer)
+{
+	int counter = 0;
+	while (counter < layer->height * layer->width)
+	{
+		int id = layer->data[counter];
+
+		if (id > 0)
+		{
+			int x = counter;
+			int y = layer->width;
+			Get(&x, &y);
+
+			TileSet* tileset = data.tilesets.start->data;
+
+			SDL_Rect r = tileset->GetTileRect(id);
+			iPoint pos = MapToWorld(x, y);
+
+			r.x = pos.x;
+			r.y = pos.y;
+
+			App->collision->NoWalkable(r);
+		}
+		counter++;
+	}
+}
+
+void j1Map::Death(MapLayer* layer)
+{
+	int counter = 0;
+	while (counter < layer->height * layer->width)
+	{
+		int id = layer->data[counter];
+
+		if (id > 0)
+		{
+			int x = counter;
+			int y = layer->width;
+			Get(&x, &y);
+
+			TileSet* tileset = data.tilesets.start->data;
+
+			SDL_Rect r = tileset->GetTileRect(id);
+			iPoint pos = MapToWorld(x, y);
+
+			r.x = pos.x;
+			r.y = pos.y;
+
+			App->collision->TriggerDeath(r);
+		}
+		counter++;
+	}
+}
+
+void j1Map::Win(MapLayer* layer)
+{
+	int counter = 0;
+	while (counter < layer->height * layer->width)
+	{
+		int id = layer->data[counter];
+
+		if (id > 0)
+		{
+			int x = counter;
+			int y = layer->width;
+			Get(&x, &y);
+
+			TileSet* tileset = data.tilesets.start->data;
+
+			SDL_Rect r = tileset->GetTileRect(id);
+			iPoint pos = MapToWorld(x, y);
+
+			r.x = pos.x;
+			r.y = pos.y;
+
+			App->collision->TriggerWin(r);
+		}
+		counter++;
+	}
+}
+
 bool j1Map::LoadLayer(pugi::xml_node& node)
 {
 	pugi::xml_node layer = node.child("map").child("layer");
@@ -356,6 +460,28 @@ bool j1Map::LoadLayer(pugi::xml_node& node)
 			tile_ = tile_.next_sibling("tile");
 			i++;
 		}
+
+		if (layer_data->name == "SpawnPoint")
+		{
+			SpawnPoint(layer_data);
+			LOG("Spawn found.");
+		}
+
+		if (layer_data->name == "NoWalkable")
+		{
+			NoWalkable(layer_data);
+		}
+
+		if (layer_data->name == "Death")
+		{
+			Death(layer_data);
+		}
+
+		if (layer_data->name == "Win")
+		{
+			Win(layer_data);
+		}
+
 
 		data.layer_array.add(layer_data);
 		layer = layer.next_sibling("layer");

@@ -110,6 +110,10 @@ private:
 	bool LoadMapProperties(pugi::xml_node& node);
 	bool LoadLayerProperties(pugi::xml_node& node, LayerProperties& properties);
 
+	void NoWalkable(MapLayer* layer);
+	void SpawnPoint(MapLayer* layer);
+	void Death(MapLayer* layer);
+	void Win(MapLayer* layer);
 
 public:
 
