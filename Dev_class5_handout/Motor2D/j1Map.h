@@ -17,7 +17,7 @@
 struct TileSet
 {
 	// TODO 7: Create a method that receives a tile id and returns it's Rectfind the Rect associated with a specific tile id
-	SDL_Rect GetTileRect(int id) const;
+	 SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
 	int					firstgid;

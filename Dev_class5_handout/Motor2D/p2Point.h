@@ -20,7 +20,7 @@ public:
 
 	p2Point(const p2Point<TYPE>& v)
 	{
-		this->x = v.x;
+		 this->x = v.x;
 		this->y = v.y;
 	}
 

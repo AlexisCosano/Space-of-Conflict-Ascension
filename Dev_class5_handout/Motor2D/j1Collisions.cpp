@@ -11,7 +11,7 @@ j1Collisions::j1Collisions()
 	matrix[COLLIDER_WALL][COLLIDER_PLAYER] = true;
 
 	matrix[COLLIDER_PLAYER][COLLIDER_PLAYER] = false;
-	matrix[COLLIDER_PLAYER][COLLIDER_WALL] = true;
+	 matrix[COLLIDER_PLAYER][COLLIDER_WALL] = true;
 }
 
 // Destructor

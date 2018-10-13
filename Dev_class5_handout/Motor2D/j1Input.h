@@ -11,7 +11,7 @@ struct SDL_Rect;
 
 enum j1EventWindow
 {
-	WE_QUIT = 0,
+	 WE_QUIT = 0,
 	WE_HIDE = 1,
 	WE_SHOW = 2,
 	WE_COUNT

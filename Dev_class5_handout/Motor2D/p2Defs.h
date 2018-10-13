@@ -8,7 +8,7 @@
 #ifdef NULL
 #undef NULL
 #endif
-#define NULL  0
+ #define NULL  0
 
 // Deletes a buffer
 #define RELEASE( x ) \

@@ -13,7 +13,7 @@ public:
 	int name;
 
 private:
-	float current_frame = 0.0f;
+	 float current_frame = 0.0f;
 	int last_frame = 0;
 	int loops = 0;
 

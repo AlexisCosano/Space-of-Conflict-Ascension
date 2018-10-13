@@ -18,7 +18,7 @@ public:
 	bool Start();
 	bool PostUpdate();
 	
-	void Jump();
+	 void Jump();
 
 public:
 

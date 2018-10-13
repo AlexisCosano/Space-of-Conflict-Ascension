@@ -19,7 +19,7 @@ private:
 public:
 
 	// Constructors
-	p2SString()
+	 p2SString()
 	{
 		Alloc(1);
 		Clear();

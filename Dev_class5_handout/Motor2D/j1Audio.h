@@ -10,7 +10,7 @@
 struct _Mix_Music;
 struct Mix_Chunk;
 
-class j1Audio : public j1Module
+ class j1Audio : public j1Module
 {
 public:
 

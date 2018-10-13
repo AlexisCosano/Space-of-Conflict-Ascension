@@ -24,7 +24,7 @@ bool j1Scene::Awake()
 	LOG("Loading Scene");
 	bool ret = true;
 
-	return ret;
+	 return ret;
 }
 
 // Called before the first frame

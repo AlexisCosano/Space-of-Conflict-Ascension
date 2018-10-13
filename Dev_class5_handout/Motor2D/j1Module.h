@@ -15,7 +15,7 @@ class j1Module
 {
 public:
 
-	j1Module() : active(false)
+	  j1Module() : active(false)
 	{}
 
 	void Init()
@@ -24,7 +24,7 @@ public:
 	}
 
 	// Called before render is available
-	virtual bool Awake(pugi::xml_node&)
+	 virtual bool Awake(pugi::xml_node&)
 	{
 		return true;
 	}

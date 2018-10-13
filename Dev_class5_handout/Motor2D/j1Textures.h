@@ -23,7 +23,7 @@ public:
 	bool Start();
 
 	// Called before quitting
-	bool CleanUp();
+	 bool CleanUp();
 
 	// Load Texture
 	SDL_Texture* const	Load(const char* path);

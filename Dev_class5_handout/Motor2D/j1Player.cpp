@@ -20,7 +20,7 @@ j1Player::j1Player()
 	for (int i = 0; i < 10; i++)
 		death.PushBack({ 1 + sprite_distance.x * i, 1 + sprite_distance.y * row, 547, 481 });
 
-	death.loop = false;
+	 death.loop = false;
 	row++;
 
 	// idle animation

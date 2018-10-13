@@ -11,7 +11,7 @@
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 enum COLLIDER_TYPE
 {
-	COLLIDER_NONE = -1,
+	 COLLIDER_NONE = -1,
 	COLLIDER_WALL,
 	COLLIDER_PLAYER,
 

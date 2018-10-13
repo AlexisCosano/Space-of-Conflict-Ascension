@@ -31,7 +31,7 @@
 #	ifdef PUGIXML_NO_EXCEPTIONS
 #		include <setjmp.h>
 #	endif
-#endif
+ #endif
 
 #ifndef PUGIXML_NO_STL
 #	include <istream>
