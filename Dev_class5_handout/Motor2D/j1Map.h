@@ -6,6 +6,13 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
+
+struct LayerProperties
+{
+	bool is_drawn = false;
+	bool has_colliders = false;
+};
+
 struct TileSet
 {
 	SDL_Rect GetTileRect(int id) const;
@@ -31,9 +38,9 @@ struct MapLayer
 	int width;
 	int height;
 	uint* data = nullptr;
+
+	LayerProperties properties;
 };
-
-
 
 enum MapTypes
 {
@@ -108,7 +115,9 @@ private:
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadLayer(pugi::xml_node& node);
 	bool LoadBackground(pugi::xml_node& node);
-	bool LoadMapPropierties(pugi::xml_node& node);
+	bool LoadMapProperties(pugi::xml_node& node);
+	bool LoadLayerProperties(pugi::xml_node& node, LayerProperties& properties);
+
 
 public:
 
