@@ -39,6 +39,9 @@ bool j1Scene::Start()
 	player->texture = App->tex->Load("textures/placeholder.png");
 	player->position = App->map->current_spawn_point;
 
+	camera_offset.x = 2;
+	camera_offset.y = 2;
+
 	return true;
 }
 
@@ -68,14 +71,15 @@ bool j1Scene::Update(float dt)
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 1;
-	
-	if (App->render->camera.y < App->map->data.camera_y_limit)
-	{
-		App->render->camera.y = App->map->data.camera_y_limit;
-	}
 
 	App->map->Draw();
-	App->render->Blit(player->texture, player->position.x, player->position.y);
+
+	/*
+	App->render->camera.x = -player->position.x + camera_offset.x;
+	App->render->camera.y = -player->position.y + camera_offset.x;
+	*/
+
+	App->render->Blit(player->texture, player->position.x, player->position.y, 1, &SDL_Rect({ 0, 0,player->player_rect.w, player->player_rect.h }));
 
 	p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 					App->map->data.width, App->map->data.height,
