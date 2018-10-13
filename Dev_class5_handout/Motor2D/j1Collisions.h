@@ -22,15 +22,11 @@ struct Collider
 {
 	SDL_Rect rect;
 	bool to_delete = false;
-	int bullettype = 0;
-	int damage = 0;
 	COLLIDER_TYPE type;
 
 	Collider(SDL_Rect rectangle, COLLIDER_TYPE type) :
 		rect(rectangle),
-		type(type),
-		bullettype(bullettype),
-		damage(damage)
+		type(type)
 	{}
 
 	void SetPos(int x, int y)
@@ -46,6 +42,8 @@ struct Collider
 	}
 
 	bool CheckCollision(const SDL_Rect& r) const;
+	bool WillCollideX(const SDL_Rect& r, int speed_x = 0) const;
+	bool WillCollideY(const SDL_Rect& r, int speed_y = 0) const;
 	void OnCollision(Collider*, Collider*) {}
 };
 
@@ -57,7 +55,7 @@ public:
 	~j1Collisions();
 
 	bool PreUpdate();
-	bool Update();
+	bool PostUpdate();
 	bool CleanUp();
 	void Erase_Non_Player_Colliders();
 

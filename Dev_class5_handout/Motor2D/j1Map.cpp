@@ -4,6 +4,8 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "j1Map.h"
+#include "j1Collisions.h"
+#include "j1Player.h"
 #include <math.h>
 
 j1Map::j1Map() : j1Module(), map_loaded(false)
@@ -22,25 +24,23 @@ bool j1Map::Awake(pugi::xml_node& config)
 	bool ret = true;
 
 	folder.create(config.child("folder").child_value());
+	
 
 	return ret;
 }
 
-void j1Map::Draw()
+void j1Map::CreateColliders()
 {
 	if(map_loaded == false)
 		return;
 
 	// TODO 5: Prepare the loop to draw all tilesets + Blit
 	int counter = 0;
-	int layer_counter = 0;
-	while (data.layer_array.At(layer_counter) != nullptr)
-	{ 
-		while (counter < data.layer_array.At(layer_counter)->data->height*data.layer_array.At(layer_counter)->data->width)
+		while (counter < data.layer_array.At(1)->data->height*data.layer_array.At(1)->data->width)
 		{
-			int id = data.layer_array.At(layer_counter)->data->data[counter]; //devuelve el tipo de tileset
+			int id = data.layer_array.At(1)->data->data[counter]; //devuelve el tipo de tileset
 			int x = counter; 
-			int y = data.layer_array.At(layer_counter)->data->width;
+			int y = data.layer_array.At(1)->data->width;
 			Get(&x, &y); 
 
 			//Now, x and y are the coordinates of the tileset
@@ -48,15 +48,49 @@ void j1Map::Draw()
 			convert_to_real_world(&x, &y);
 
 			//Now they are in pixels
+			if(id == 11 || id == 12)
+			{ 
+				App->collision->AddCollider({ x,y,data.tilesets.At(0)->data->tile_width, data.tilesets.At(0)->data->tile_height }, COLLIDER_WALL);
+			}
+			counter++;
+		}
+}
+
+void j1Map::Draw()
+{
+	if (map_loaded == false)
+		return;
+
+
+	//Blit background
+     App->render->Blit(data.background_image, data.background_offset.x, data.background_offset.y);
+
+
+	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	int counter = 0;
+		while (counter < data.layer_array.At(0)->data->height*data.layer_array.At(0)->data->width)
+		{
+			int id = data.layer_array.At(0)->data->data[counter]; //devuelve el tipo de tileset
+			int x = counter;
+			int y = data.layer_array.At(0)->data->width;
+			Get(&x, &y);
+
+			//Now, x and y are the coordinates of the tileset
+
+			convert_to_real_world(&x, &y);
+
+			//Now they are in pixels
 
 			//App->render->Blit(data.tilesets.At(0)->data->texture, x, y, &data.tilesets.At(0)->data->GetTileRect(id));
-			App->render->Blit(data.tilesets.At(0)->data->texture, x, y, &Tile_Rect(id));
-		    counter++;
+		
+				App->render->Blit(data.tilesets.At(0)->data->texture, x, y, 1, &Tile_Rect(id));
+			counter++;
 		}
-		layer_counter++;
-		counter = 0;
+
+
+		
 		// TODO 9: Complete the draw function
-	}
+	
 }
 
 
@@ -131,6 +165,7 @@ bool j1Map::CleanUp()
 bool j1Map::Load(const char* file_name)
 {
 	bool ret = true;
+
 	p2SString tmp("%s%s", folder.GetString(), file_name);
 
 	pugi::xml_parse_result result = map_file.load_file(tmp.GetString());
@@ -146,6 +181,8 @@ bool j1Map::Load(const char* file_name)
 	{
 		ret = LoadMap();
 	}
+	LoadBackground(map_file);
+	LoadMapPropierties(map_file);
 
 	// Load all tilesets info ----------------------------------------------
 	pugi::xml_node tileset;
@@ -201,6 +238,12 @@ bool j1Map::Load(const char* file_name)
 			item_layer = item_layer->next;
 		}
 	}
+
+	//Set player starting position
+
+	App->player->position.x = data.player_starting_value.x;
+	App->player->position.y = data.player_starting_value.y;
+
 
 	map_loaded = ret;
 
@@ -362,6 +405,27 @@ bool j1Map::LoadLayer(pugi::xml_node& node)
 		data.layer_array.add(layer_data);
 		layer = layer.next_sibling("layer");
 	}
+
+	return true;
+}
+
+bool j1Map::LoadBackground(pugi::xml_node& node)
+{
+	data.background_image = App->tex->Load(PATH(folder.GetString(),node.child("map").child("imagelayer").child("image").attribute("source").as_string()));
+
+	data.background_offset.x = node.child("map").child("imagelayer").attribute("offsetx").as_float();
+
+	data.background_offset.y = node.child("map").child("imagelayer").attribute("offsety").as_float();
+
+	return true;
+}
+bool j1Map::LoadMapPropierties(pugi::xml_node& node)
+{
+	data.parallax_speed = node.child("map").attribute("parallax_speed").as_float();
+
+	data.player_starting_value.x = node.child("map").attribute("player_starting_value.x").as_int();
+
+	data.player_starting_value.y = node.child("map").attribute("player_starting_value.y").as_int();
 
 	return true;
 }

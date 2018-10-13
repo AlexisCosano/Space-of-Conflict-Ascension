@@ -34,7 +34,7 @@ bool j1Collisions::PreUpdate()
 }
 
 // Called before render is available
-bool j1Collisions::Update()
+bool j1Collisions::PostUpdate()
 {
 	Collider* c1;
 	Collider* c2;
@@ -95,10 +95,10 @@ void j1Collisions::DebugDraw()
 			App->render->DrawQuad(colliders[i]->rect, 255, 255, 255, alpha, false);
 			break;
 		case COLLIDER_WALL: // blue
-			App->render->DrawQuad(colliders[i]->rect, 0, 0, 255, alpha, false);
+			App->render->DrawQuad(colliders[i]->rect, 0, 0, 255, alpha, true);
 			break;
 		case COLLIDER_PLAYER: // green
-			App->render->DrawQuad(colliders[i]->rect, 0, 255, 0, alpha, false);
+			App->render->DrawQuad(colliders[i]->rect, 0, 255, 0, alpha, true);
 			break;
 		}
 	}
@@ -154,6 +154,32 @@ void j1Collisions::Erase_Non_Player_Colliders()
 bool Collider::CheckCollision(const SDL_Rect& r) const
 {
 	if (r.y + r.h > rect.y && r.y < rect.y + rect.h && r.x + r.w > rect.x && r.x < rect.x + rect.w)
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+bool Collider::WillCollideX(const SDL_Rect& r, int speed_x) const
+{
+	if (r.y + r.h > rect.y && r.y < rect.y + rect.h && r.x + r.w > rect.x + speed_x && r.x < rect.x + rect.w + speed_x)
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+bool Collider::WillCollideY(const SDL_Rect& r, int speed_y) const
+{
+	if (r.y + r.h > rect.y - speed_y && r.y < rect.y + rect.h + speed_y && r.x + r.w > rect.x && r.x < rect.x + rect.w)
 	{
 		return true;
 	}

@@ -31,8 +31,12 @@ bool j1Scene::Awake()
 bool j1Scene::Start()
 {	
 	//App->map->Load("hello.tmx");
-	App->map->Load("hello2.tmx");
-	App->map->map = 1;
+	App->map->Load("Level 1.tmx");
+	App->map->CreateColliders();
+	App->map->map = 0;
+
+	App->render->camera.x = 0; //SHOULD BE USING "camera_starting_values"
+	App->render->camera.y = -1778;
 
 	return true;
 }
@@ -65,7 +69,7 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 1;
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 	{ 
 		if(App->map->map == 0)
 		{ 
@@ -86,8 +90,6 @@ bool j1Scene::Update(float dt)
 			App->map->Load("Test-map-1.tmx");
 			App->map->map = 0;
 
-			App->render->camera.x = 100;
-			App->render->camera.y = 400;
 		}
 	}
 	
