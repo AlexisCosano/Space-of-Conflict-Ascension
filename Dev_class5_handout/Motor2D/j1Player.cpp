@@ -153,7 +153,7 @@ bool j1Player::PostUpdate()
 	}
 
 	// Saltar
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && !sliding)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !sliding)
 	{
 		if (contact.y == 1)
 		{
