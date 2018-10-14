@@ -91,6 +91,9 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
+	// Unload current map
+	void Unload();
+
 	iPoint MapToWorld(int x, int y) const;
 
 	void Get(int* x, int* y); //la x es el numero, la y cuantos elementos hay en una fila

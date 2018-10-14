@@ -11,6 +11,9 @@ class j1Scene : public j1Module
 public:
 	j1Player * player;
 
+	bool to_load;
+	const char* map_to_load;
+
 public:
 
 	j1Scene();
@@ -36,8 +39,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
- private:
+	void LoadDesiredMap(int map_id);
 
+ private:
 	 p2Point<int> offset;
 
 };

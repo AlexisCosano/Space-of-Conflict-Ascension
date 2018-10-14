@@ -618,3 +618,9 @@ void j1Map::convert_to_real_world(int* x, int* y)
 
 	*y = *y * data.tilesets.At(0)->data->tile_width;
 }
+
+void j1Map::Unload()
+{
+	data.layer_array.clear();
+	App->collision->ClearColliders();
+}

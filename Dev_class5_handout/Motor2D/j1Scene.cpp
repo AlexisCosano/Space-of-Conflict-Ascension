@@ -54,6 +54,17 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		LoadDesiredMap(1);
+		player->position = App->map->current_spawn_point;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		player->position = App->map->current_spawn_point;
+	}
+
 	if(App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		App->LoadGame();
 
@@ -107,6 +118,14 @@ bool j1Scene::PostUpdate()
 	if(App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
+	if (to_load)
+	{
+		App->map->Unload();
+		App->map->Load(map_to_load);
+		player->position = App->map->current_spawn_point;
+		to_load = false;
+	}
+
 	return ret;
 }
 
@@ -116,4 +135,19 @@ bool j1Scene::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+
+
+void j1Scene::LoadDesiredMap(int map_id)
+{
+	to_load = true;
+
+	if (map_id == 1)
+	{
+		map_to_load = "level1Test.tmx";
+	}
+	else
+	{
+		map_to_load = "level2Test.tmx";
+	}
 }
