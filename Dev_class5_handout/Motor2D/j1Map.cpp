@@ -54,7 +54,14 @@ void j1Map::Draw()
 				 {
 					 for (int i = 0; i < data.tilesets.count(); i++)
 					 {
-						 App->render->Blit(data.tilesets.At(i)->data->texture, x, y, 1, &TileRect(id, i));
+						 if (data.layer_array.At(iterator)->data->properties.is_parallax)
+						 {							
+							 App->render->Blit(data.tilesets.At(i)->data->texture, x + (float)(App->player->position.x - current_spawn_point.x) * 0.3f, y + (float)(App->player->position.y - current_spawn_point.y) * 0.3f, 1, &TileRect(id, i));
+						 }
+						 else
+						 {
+							 App->render->Blit(data.tilesets.At(i)->data->texture, x, y, 1, &TileRect(id, i));
+						 }
 					 }
 				 }
 			 }
@@ -202,10 +209,6 @@ bool j1Map::Load(const char* file_name)
 			item_layer = item_layer->next;
 		}
 	}
-
-    //Posicion inicial del jugador
-	App->player->position.x = data.player_starting_value.x;
-	App->player->position.y = data.player_starting_value.y;
 
 	map_loaded = ret;
 
@@ -559,15 +562,21 @@ bool j1Map::LoadLayerProperties(pugi::xml_node& node, LayerProperties& propertie
 		pugi::xml_attribute collider_child = property_child.attribute("name");
 		p2SString name = collider_child.as_string();
 
-		if (name == "Draw")
+		if(name == "Draw")
 		{
 			properties.is_drawn = property_child.attribute("value").as_bool();
 		}
 
-		else if (name == "HasColliders")
+		else if(name == "HasColliders")
 		{
 			properties.has_colliders = property_child.attribute("value").as_bool();
 		}
+		
+		else if (name == "ParallaxBackground")
+		{
+			properties.is_parallax = property_child.attribute("value").as_bool();
+		}
+
 		else
 		{
 			LOG("Error: no properties found.");

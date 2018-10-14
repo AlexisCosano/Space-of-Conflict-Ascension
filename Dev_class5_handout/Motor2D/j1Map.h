@@ -11,6 +11,7 @@ struct LayerProperties
 {
 	bool is_drawn = false;
 	bool has_colliders = false;
+	bool is_parallax = false;
 };
 
 struct TileSet
@@ -119,6 +120,7 @@ public:
 
 	MapData data;
 	iPoint current_spawn_point;
+	iPoint background_position;
 	bool ShowHiddenLayers = false;
 
 private:

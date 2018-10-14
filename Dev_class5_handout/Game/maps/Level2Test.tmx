@@ -10,6 +10,7 @@
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="HasColliders" type="bool" value="false"/>
+   <property name="ParallaxBackground" type="bool" value="true"/>
   </properties>
   <data>
    <tile gid="0"/>
