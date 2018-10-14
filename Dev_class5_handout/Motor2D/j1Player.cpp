@@ -258,7 +258,7 @@ void j1Player::Jump()
 }
 
 // Save & Load ------------------------------
-bool j1Player::Save(pugi::xml_node& node)
+bool j1Player::Save(pugi::xml_node& node) const
 {
 	bool ret = true;
 
@@ -286,7 +286,7 @@ bool j1Player::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-bool j1Player::SavePlayerState(pugi::xml_node& node)
+bool j1Player::SavePlayerState(pugi::xml_node& node) const
 {
 	bool ret = true;
 

@@ -28,7 +28,7 @@ public:
 	bool CleanUp();
 
 	// Save & Load
-	bool Save(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
 	bool Load(pugi::xml_node&);
 
 	bool CheckCollisions();
@@ -37,7 +37,7 @@ public:
 
 	void SetTexture(SDL_Texture* normal_texture, SDL_Texture* god_mode_texture);
 
-	bool SavePlayerState(pugi::xml_node& node);
+	bool SavePlayerState(pugi::xml_node& node) const;
 	bool LoadState(pugi::xml_node& node);
 
 public:

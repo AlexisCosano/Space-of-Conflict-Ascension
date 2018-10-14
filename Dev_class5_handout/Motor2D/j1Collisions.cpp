@@ -7,6 +7,7 @@
 
 j1Collisions::j1Collisions()
 {
+	name.create("collisions");
 }
 
 j1Collisions::~j1Collisions()

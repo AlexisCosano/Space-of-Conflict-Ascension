@@ -73,8 +73,8 @@ bool j1App::Awake()
 		
 	config = LoadConfig(config_file);
 
-	save_game = "save_game";
-	load_game = "save_game";
+	save_game = "save_game.xml";
+	load_game = "save_game.xml";
 
 	if(config.empty() == false)
 	{

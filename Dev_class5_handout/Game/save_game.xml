@@ -1,9 +1,14 @@
-<!-- Save game for the game -->
-
+<?xml version="1.0"?>
 <game_state>
-
-  <player>
-    <player_position x="100" y="0"/>
-  </player>
-
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<map />
+	<scene />
+	<player>
+		<position positionx="74" positiony="68" />
+	</player>
+	<collisions />
+	<renderer />
 </game_state>

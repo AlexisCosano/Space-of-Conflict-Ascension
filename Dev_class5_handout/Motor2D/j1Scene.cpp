@@ -81,20 +81,18 @@ bool j1Scene::Update(float dt)
 			App->player->god_mode = false;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->render->camera.y -= 10;
-
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->render->camera.y += 10;
-
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->camera.x -= 10;
-
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x += 10;
-
 	App->render->camera.x = ((-player->position.x * App->win->GetScale()) + (offset.x * App->win->GetScale()));
 	App->render->camera.y = ((-player->position.y * App->win->GetScale()) + (offset.y * App->win->GetScale()));
+
+	if (App->render->camera.y == App->map->data.camera_y_limit)
+	{
+		App->render->camera.y = App->render->camera.y- App->render->camera.y;
+	}
+	else
+	{
+
+	}
+	
 
 	App->map->Draw();
 
@@ -133,7 +131,6 @@ bool j1Scene::CleanUp()
 
 	return true;
 }
-
 
 void j1Scene::LoadDesiredMap(int map_id)
 {
