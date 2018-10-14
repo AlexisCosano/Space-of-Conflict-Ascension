@@ -621,6 +621,6 @@ void j1Map::convert_to_real_world(int* x, int* y)
 
 void j1Map::Unload()
 {
-	data.layer_array.clear();
+	CleanUp();
 	App->collision->ClearColliders();
 }
