@@ -22,7 +22,6 @@ j1Input::~j1Input()
 	 delete[] keyboard;
 }
 
-// Llama al render antes de que este disponible
 bool j1Input::Awake(pugi::xml_node& config)
 {
 	LOG("Init SDL input event system");
@@ -38,14 +37,12 @@ bool j1Input::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-// LLama antes del primer frame
 bool j1Input::Start()
 {
 	SDL_StopTextInput();
 	return true;
 }
 
-//LLama a cada loop iteracion
 bool j1Input::PreUpdate()
 {
 	static SDL_Event event;

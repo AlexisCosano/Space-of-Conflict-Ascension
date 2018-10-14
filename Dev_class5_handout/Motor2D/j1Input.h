@@ -35,22 +35,16 @@ public:
 	// Destructor
 	virtual ~j1Input();
 
-	//Llama al render antes de que este dispoinible
 	bool Awake(pugi::xml_node&);
 
-	//Llama antes de cargar primer frame
 	bool Start();
 
-	// LLama a cada loop iteracion
 	bool PreUpdate();
 
-	// Llama antes de salir
 	bool CleanUp();
 
-	// Reune los eventos win
 	bool GetWindowEvent(j1EventWindow ev);
 
-	// Chequea los key states(mouse y joy incluidos)
 	j1KeyState GetKey(int id) const
 	{
 		return keyboard[id];
@@ -61,10 +55,8 @@ public:
 		return mouse_buttons[id - 1];
 	}
 
-	// Chequea si cierto evento de window a sucedido
 	bool GetWindowEvent(int code);
 
-	// Mouse/axis posicion
 	void GetMousePosition(int &x, int &y);
 	void GetMouseMotion(int& x, int& y);
 

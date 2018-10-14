@@ -17,7 +17,6 @@ j1Audio::j1Audio() : j1Module()
 j1Audio::~j1Audio()
 {}
 
-// Render disponible
 bool j1Audio::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Audio Mixer");
@@ -31,7 +30,6 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	// carga soporte para el JPG y PNG
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
@@ -42,7 +40,6 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	//Inicia SDL_mixer
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		 LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
@@ -56,7 +53,6 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	return ret;
 }
 
-// Llama antes de salir
 bool j1Audio::CleanUp()
 {
 	if(!active)
@@ -82,7 +78,6 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
-// Reproduce la musica
 bool j1Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
@@ -101,7 +96,6 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 			Mix_HaltMusic();
 		}
 
-		// llama a los bloques antes del fadeout
 		Mix_FreeMusic(music);
 	}
 
@@ -137,7 +131,6 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-// Carga el WAV pon el que tu quieras
 unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
@@ -160,7 +153,6 @@ unsigned int j1Audio::LoadFx(const char* path)
 	return ret;
 }
 
-// Reproduce el WAV
 bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;

@@ -17,7 +17,6 @@ j1Map::j1Map() : j1Module(), map_loaded(false)
 j1Map::~j1Map()
 {}
 
-// Llama al render antes de que este disponible
 bool j1Map::Awake(pugi::xml_node& config)
 {
 	 LOG("Loading Map Parser");
@@ -121,7 +120,6 @@ bool j1Map::CleanUp()
 {
 	LOG("Unloading map");
 
-	// Quita los tilesets
 	p2List_item<TileSet*>* item;
 	item = data.tilesets.start;
 
@@ -215,7 +213,6 @@ bool j1Map::Load(const char* file_name)
 	return ret;
 }
 
-// Carga las propiedades generales del mapa
 bool j1Map::LoadMap()
 {
 	bool ret = true;

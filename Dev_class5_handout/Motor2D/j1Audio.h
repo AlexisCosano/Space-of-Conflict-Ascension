@@ -19,19 +19,14 @@ public:
 	// Destructor
 	virtual ~j1Audio();
 
-	// Llamada al render antes
 	bool Awake(pugi::xml_node&);
 
-	// Llama antes de quitarlo
 	bool CleanUp();
 
-	//Repdoruce el archivo de musica
 	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
 
-	//Carga el WAV en memoria
 	unsigned int LoadFx(const char* path);
 
-	// Reproduce un WAV cargado antes
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 private:

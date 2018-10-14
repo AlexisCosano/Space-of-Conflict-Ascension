@@ -96,7 +96,7 @@ public:
 
 	iPoint MapToWorld(int x, int y) const;
 
-	void Get(int* x, int* y); //la x es el numero, la y cuantos elementos hay en una fila
+	void Get(int* x, int* y);
 
 	SDL_Rect TileRect(int tileid, int iterator);
 
