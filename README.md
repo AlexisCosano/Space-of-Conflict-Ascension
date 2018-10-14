@@ -18,6 +18,15 @@ Debug
 
 Goal = reach the top of the level
 
+----------------------------------------------------------------------
+
+Known issues:
+
+- When loading from map 1 to map 2 and viceversa, the character will sink 1 pixel into the texture he's standing on. Correct this by
+pressing the spacebar to jump and unstuck the character.
+
+----------------------------------------------------------------------
+
 Music from:
 https://vignette.wikia.nocookie.net/mario/images/b/bf/New_super_mario_bros_Musica.ogg/revision/latest?cb=20120401233827&path-prefix=es
 https://themushroomkingdom.net/media/smb/wav
