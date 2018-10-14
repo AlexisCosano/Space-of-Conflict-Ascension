@@ -40,7 +40,9 @@ bool j1Player::Awake(pugi::xml_node& config)
 {
 	LOG("Init player");
 	bool ret = true;
+
 	current_map = 1;
+	App->scene->LoadDesiredMap(current_map);
 
 	speed = config.child("speed").attribute("value").as_int(1);
 	gravity = config.child("gravity").attribute("value").as_int(1);
@@ -116,6 +118,20 @@ bool j1Player::Update(float dt)
 		jump_banned = false;
 		grounded = true;
 		jumping = false;
+	}
+
+	if (CheckWin() == true)
+	{
+		if (current_map == 1)
+		{
+			current_map = 2;
+			App->scene->LoadDesiredMap(current_map);
+		}
+		else
+		{
+			current_map = 1;
+			App->scene->LoadDesiredMap(current_map);
+		}
 	}
 
 	bool flip = false;

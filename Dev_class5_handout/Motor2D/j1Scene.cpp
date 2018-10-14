@@ -32,9 +32,6 @@ bool j1Scene::Awake()
  // Called before the first frame
 bool j1Scene::Start()
 {	
-	App->map->Load("Level2Test.tmx");
-	App->map->map = 0;
-
 	player = App->player;
 	player->SetTexture(App->tex->Load("textures/placeholder.png"), App->tex->Load("textures/godmode.png"));
 	player->position = App->map->current_spawn_point;
