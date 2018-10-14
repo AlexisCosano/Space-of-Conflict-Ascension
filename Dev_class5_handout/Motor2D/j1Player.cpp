@@ -283,6 +283,15 @@ bool j1Player::LoadState(pugi::xml_node& node)
 	position.x = node.child("position").attribute("positionx").as_int();
 	position.y = node.child("position").attribute("positiony").as_int();
 
+	int current_map_tmp = node.child("current_map").attribute("value").as_int();
+
+	if (current_map_tmp != current_map)
+	{
+		current_map = current_map_tmp;
+		loading = true;
+		App->scene->LoadDesiredMap(current_map);
+	}
+
 	return true;
 }
 
@@ -294,6 +303,10 @@ bool j1Player::SavePlayerState(pugi::xml_node& node) const
 
 	player_node.append_attribute("positionx").set_value(position.x);
 	player_node.append_attribute("positiony").set_value(position.y);
+
+	player_node = node.append_child("current_map");
+
+	player_node.append_attribute("value").set_value(current_map);
 
 	return ret;
 }

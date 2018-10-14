@@ -113,11 +113,19 @@ bool j1Scene::PostUpdate()
 	if(App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
-	if (to_load)
+	if (to_load && App->player->loading == false)
 	{
 		App->map->Unload();
 		App->map->Load(map_to_load);
 		player->position = App->map->current_spawn_point;
+		to_load = false;
+	}
+	
+	if(to_load && App->player->loading == true)
+	{
+		App->map->Unload();
+		App->map->Load(map_to_load);
+		App->player->loading = false;
 		to_load = false;
 	}
 

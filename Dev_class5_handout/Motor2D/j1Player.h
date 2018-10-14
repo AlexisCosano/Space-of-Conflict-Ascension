@@ -49,6 +49,8 @@ public:
 	int jump_distance;
 	int current_jump_distance;
 
+	bool loading = false;
+
 	SDL_Rect player_rect;
 	p2Point<int> position;
 	SDL_Texture* texture = nullptr;
