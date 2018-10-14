@@ -51,9 +51,8 @@ bool j1Audio::Awake(pugi::xml_node& config)
 	}
 
 
-	LoadFx("audio/fx/hai.wav");
-	LoadFx("audio/fx/nye2.wav");
-	PlayMusic("audio/music/Song.ogg");
+	LoadFx("audio/fx/jump.wav");
+	PlayMusic("audio/music/Song.ogx");
 	return ret;
 }
 
