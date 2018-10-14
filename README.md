@@ -22,8 +22,7 @@ Goal = reach the top of the level
 
 Known issues:
 
-- When loading from map 1 to map 2 and viceversa, the character will sink 1 pixel into the texture he's standing on. Correct this by
-pressing the spacebar to jump and unstuck the character.
+- When loading from map 1 to map 2 and viceversa, the character will sink 1 pixel into the tile he's standing on. Fix this by pressing the spacebar to jump and unstuck the character.
 
 ----------------------------------------------------------------------
 
